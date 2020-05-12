@@ -1,1 +1,1 @@
-# Visuallatiation-of-Path-finding-Algorithms
+# Visualization-of-Path-finding-Algorithms
