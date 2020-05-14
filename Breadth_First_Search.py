@@ -1,6 +1,9 @@
-import json
 from collections import defaultdict
 from collections import deque
+
+
+def new_grid(dim):
+    return [["." for _ in range(dim)] for _ in range(dim)]
 
 
 # inspired by this gist: https://gist.github.com/hrldcpr/2012250
@@ -32,7 +35,7 @@ def main():
     # double ended queue, to use as a FIFO queue
     q = deque()
 
-    print(json.dumps(traversed_tree, indent=4))
+    print(new_grid(4))
 
 
 if __name__ == '__main__':
