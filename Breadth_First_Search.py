@@ -9,6 +9,7 @@ import utils
 def tree(): return defaultdict(tree)
 
 
+# Grid could be a class, and get_neighbors one of its methods
 def get_neighbors(point, grid):
     # possible movements, only up down left right, maybe diagonally should be an option?
     dy, dx = [-1, 0, 1, 0], [0, 1, 0, -1]
@@ -19,10 +20,9 @@ def get_neighbors(point, grid):
         y, x = point[0] + dy[i], point[1] + dx[i]
 
         # check if neighbors are within the grid, skip if not
-        if not (0 <= x < len(grid[0]) and 0 <= y < len(grid)):
-            continue
-
-        neighbors.append((y, x))
+        if 0 <= x < len(grid[0]) and 0 <= y < len(grid):
+            if grid[y, x] == " ":
+                neighbors.append((y, x))
 
     return neighbors
 
@@ -32,6 +32,10 @@ def main():
     traversed_tree = tree()
     grid_dim = 10
     grid = utils.new_grid(grid_dim)
+
+    grid[:9, 4] = "+"
+    grid[1, 1:9] = "+"
+    grid[3, 6:] = "+"
 
     start = (0, 0)
     goal = (9, 9)
@@ -57,7 +61,7 @@ def main():
                     q.append(neighbor)
 
                     screen.clear()
-                    screen.addstr(utils.visualize_grid(visited, grid_dim))
+                    screen.addstr(utils.visualize_grid(grid, visited))
                     screen.refresh()
                     time.sleep(0.05)
 
