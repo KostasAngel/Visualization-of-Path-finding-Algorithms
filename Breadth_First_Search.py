@@ -1,19 +1,8 @@
 import curses
 import time
-from collections import defaultdict
-from collections import deque
-
-import numpy as np
+from collections import defaultdict, deque
 
 import utils
-
-
-def print_grid(visited, dim):
-    empty_grid = np.array(utils.new_grid(dim, " "))
-    for p in visited:
-        empty_grid[p] = "."
-
-    return "\n".join(" ".join(i) for i in empty_grid)
 
 
 # inspired by this gist: https://gist.github.com/hrldcpr/2012250
@@ -22,18 +11,18 @@ def tree(): return defaultdict(tree)
 
 def get_neighbors(point, grid):
     # possible movements, only up down left right, maybe diagonally should be an option?
-    dx, dy = [-1, 0, 1, 0], [0, 1, 0, -1]
+    dy, dx = [-1, 0, 1, 0], [0, 1, 0, -1]
 
     neighbors = []
     for i in range(4):
         # possible neighbors
-        x, y = point[0] + dx[i], point[1] + dy[i]
+        y, x = point[0] + dy[i], point[1] + dx[i]
 
         # check if neighbors are within the grid, skip if not
         if not (0 <= x < len(grid[0]) and 0 <= y < len(grid)):
             continue
 
-        neighbors.append((x, y))
+        neighbors.append((y, x))
 
     return neighbors
 
@@ -68,7 +57,7 @@ def main():
                     q.append(neighbor)
 
                     screen.clear()
-                    screen.addstr(print_grid(visited, grid_dim))
+                    screen.addstr(utils.visualize_grid(visited, grid_dim))
                     screen.refresh()
                     time.sleep(0.05)
 
