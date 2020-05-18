@@ -1,15 +1,1 @@
-arrow==0.13.0
-astroid==2.2.5
-b2==1.4.0
-b2sdk==0.1.8
-certifi==2020.4.5.1
-funcsigs==1.0.2
-isort==4.3.21
-lazy-object-proxy==1.4.2
-logfury==0.1.2
-mccabe==0.6.1
-pycorenlp==0.3.0
-pylint==2.3.1
-tqdm==4.35.0
-typed-ast==1.4.0
-wrapt==1.11.2
+numpy~=1.18.4
