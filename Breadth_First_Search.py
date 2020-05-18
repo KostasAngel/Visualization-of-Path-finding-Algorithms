@@ -31,7 +31,7 @@ def get_neighbors(point, grid):
     return neighbors
 
 
-def main():
+def bfs():
     grid_dim = 20
     grid = utils.new_grid(grid_dim)
 
@@ -64,6 +64,10 @@ def main():
                 print(neighbor)
 
     print("Path to goal:", calculate_path(start, goal, child_parent_pairs))
+
+
+def main():
+    bfs()
 
 
 if __name__ == '__main__':
