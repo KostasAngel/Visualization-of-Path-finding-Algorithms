@@ -4,18 +4,18 @@ import numpy as np
 
 
 def new_grid(dim, fill=" "):
-    return np.array([[f"{fill}" for _ in range(dim)] for _ in range(dim)])
+    return np.array([[f'{fill}' for _ in range(dim)] for _ in range(dim)])
 
 
 def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=True):
     grid = np.copy(grid)
     # symbols for grid visualization
     symbols = {"border": "+",
-               "space": "  ",
-               "visited": ".",
-               "path": "*",
-               "start": "o",
-               "goal": "X"}
+               "space": " ",
+               "visited": "·",
+               "path": "o",
+               "start": "S",
+               "goal": "G"}
 
     # mark the points visited
     if visited:
@@ -38,6 +38,10 @@ def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=
     # add visual border at top and bottom of main body
     top = bottom = symbols["space"].join([symbols["border"]] * (len(grid) + 2))
     whole = [top] + main_body + [bottom]
+
+    if legend:
+        lgd = [f"{v} -> {k}" for k, v in symbols.items()]
+        whole = whole + lgd
 
     return "\n".join(whole)
 
