@@ -1,1 +1,3 @@
-# Visualization-of-Path-finding-Algorithms
+# Visualization of Path Finding Algorithms
+
+## Breadth-First Search
