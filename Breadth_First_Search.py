@@ -1,5 +1,3 @@
-import curses
-import time
 from collections import deque
 
 import utils
@@ -37,10 +35,6 @@ def main():
     grid_dim = 20
     grid = utils.new_grid(grid_dim)
 
-    # grid[:9, 4] = "+"
-    # grid[1, 1:9] = "+"
-    # grid[3, 6:] = "+"
-
     grid[:17, 4] = "+"
     grid[1, 1:9] = "+"
     grid[10, 6:18] = "+"
@@ -56,8 +50,6 @@ def main():
 
     child_parent_pairs = dict()
 
-    # screen = curses.initscr()
-
     while queue:  # checks if queue is empty
         current_point = queue.popleft()
 
@@ -70,17 +62,8 @@ def main():
                 queue.append(neighbor)
                 child_parent_pairs[neighbor] = current_point
                 print(neighbor)
-                # visualization logic
-                # screen.clear()
-                # screen.addstr(utils.visualize_grid(grid, visited))
-                # screen.refresh()
-                # time.sleep(0.03)
 
     print("Path to goal:", calculate_path(start, goal, child_parent_pairs))
-    # draw path
-    # screen.clear()
-    # screen.addstr(utils.visualize_grid(grid, visited, calculate_path(start, goal, child_parent_pairs)))
-    # screen.refresh()
 
 
 if __name__ == '__main__':
