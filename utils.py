@@ -7,36 +7,36 @@ def new_grid(dim, fill=" "):
     return np.array([[f"{fill}" for _ in range(dim)] for _ in range(dim)])
 
 
-def visualize_grid(grid, visited=None, path=None, start=None, goal=None):
+def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=True):
     grid = np.copy(grid)
     # symbols for grid visualization
-    border_sym = "+"
-    space_sym = "  "
-    visited_sym = "."
-    path_sym = "x"
-    start_sym = "s"
-    goal_sym = "g"
+    symbols = {"border": "+",
+               "space": "  ",
+               "visited": ".",
+               "path": "*",
+               "start": "o",
+               "goal": "X"}
 
     # mark the points visited
     if visited:
         for p in visited:
-            grid[p] = visited_sym
+            grid[p] = symbols["visited"]
 
     # draw path if provided
     if path:
         for p in path:
-            grid[p] = path_sym
+            grid[p] = symbols["path"]
 
     if start:
-        grid[start] = start_sym
+        grid[start] = symbols["start"]
     if goal:
-        grid[goal] = goal_sym
+        grid[goal] = symbols["goal"]
 
     # add visual border at beginning and end of grid
-    main_body = [space_sym.join([border_sym] + list(row) + [border_sym]) for row in grid]
+    main_body = [symbols["space"].join([symbols["border"]] + list(row) + [symbols["border"]]) for row in grid]
 
     # add visual border at top and bottom of main body
-    top = bottom = space_sym.join([border_sym] * (len(grid) + 2))
+    top = bottom = symbols["space"].join([symbols["border"]] * (len(grid) + 2))
     whole = [top] + main_body + [bottom]
 
     return "\n".join(whole)
