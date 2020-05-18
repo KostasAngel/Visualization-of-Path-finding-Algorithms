@@ -56,7 +56,7 @@ def main():
 
     child_parent_pairs = dict()
 
-    screen = curses.initscr()
+    # screen = curses.initscr()
 
     while queue:  # checks if queue is empty
         current_point = queue.popleft()
@@ -69,17 +69,18 @@ def main():
             if neighbor not in visited and neighbor not in queue:  # check if already visited this point
                 queue.append(neighbor)
                 child_parent_pairs[neighbor] = current_point
-
+                print(neighbor)
                 # visualization logic
-                screen.clear()
-                screen.addstr(utils.visualize_grid(grid, visited))
-                screen.refresh()
-                time.sleep(0.03)
+                # screen.clear()
+                # screen.addstr(utils.visualize_grid(grid, visited))
+                # screen.refresh()
+                # time.sleep(0.03)
 
+    print("Path to goal:", calculate_path(start, goal, child_parent_pairs))
     # draw path
-    screen.clear()
-    screen.addstr(utils.visualize_grid(grid, visited, calculate_path(start, goal, child_parent_pairs)))
-    screen.refresh()
+    # screen.clear()
+    # screen.addstr(utils.visualize_grid(grid, visited, calculate_path(start, goal, child_parent_pairs)))
+    # screen.refresh()
 
 
 if __name__ == '__main__':
