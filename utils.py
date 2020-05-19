@@ -1,6 +1,8 @@
 from collections import defaultdict
+from time import sleep
 
 import numpy as np
+from asciimatics.screen import ManagedScreen
 
 
 def new_grid(dim, fill=" "):
@@ -27,6 +29,7 @@ def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=
         for p in path:
             grid[p] = symbols["path"]
 
+    # draw start and goal
     if start:
         grid[start] = symbols["start"]
     if goal:
@@ -48,3 +51,21 @@ def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=
 
 # inspired by this gist: https://gist.github.com/hrldcpr/2012250
 def tree(): return defaultdict(tree)
+
+
+def visualize_asciimatics(res):
+    with ManagedScreen() as screen:
+
+        for i in range(1, len(res["visited"])):
+            grid = visualize_grid(res["grid"], visited=res["visited"][:i + 1], start=res["start"], goal=res["goal"])
+
+            for j, row in enumerate(grid.split("\n")):
+                screen.print_at(row, 0, j)
+            screen.refresh()
+            sleep(0.03)
+        grid = visualize_grid(res["grid"], visited=res["visited"][:i + 1], path=res["path"], start=res["start"],
+                              goal=res["goal"])
+        for j, row in enumerate(grid.split("\n")):
+            screen.print_at(row, 0, j)
+        screen.refresh()
+        sleep(20)
