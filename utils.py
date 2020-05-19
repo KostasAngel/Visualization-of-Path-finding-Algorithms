@@ -1,4 +1,3 @@
-from collections import defaultdict
 from time import sleep
 
 import numpy as np
@@ -47,10 +46,6 @@ def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=
         whole = whole + lgd
 
     return "\n".join(whole)
-
-
-# inspired by this gist: https://gist.github.com/hrldcpr/2012250
-def tree(): return defaultdict(tree)
 
 
 def visualize_asciimatics(res):
