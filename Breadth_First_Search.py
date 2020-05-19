@@ -13,24 +13,6 @@ def calculate_path(start, goal, child_parent_pairs):
     return list(reversed(reverse_path))
 
 
-# Grid could be a class, and get_neighbors one of its methods
-def get_neighbors(point, grid):
-    # possible movements, only up down left right, maybe diagonally should be an option?
-    dy, dx = [-1, 0, 1, 0], [0, 1, 0, -1]
-
-    neighbors = []
-    for i in range(len(dy)):
-        # possible neighbors
-        y, x = point[0] + dy[i], point[1] + dx[i]
-
-        # check if neighbors are within the grid
-        if 0 <= x < len(grid[0]) and 0 <= y < len(grid):
-            if grid[y, x] == " ":
-                neighbors.append((y, x))
-
-    return neighbors
-
-
 def bfs():
     grid_dim = 20
     grid = utils.new_grid(grid_dim)
@@ -55,19 +37,20 @@ def bfs():
 
         visited.append(current_point)  # mark as visited
 
-        neighbors = get_neighbors(current_point, grid)
+        neighbors = utils.get_neighbors(current_point, grid)
 
         for neighbor in neighbors:
             if neighbor not in visited and neighbor not in queue:  # check if already visited this point
                 queue.append(neighbor)
                 child_parent_pairs[neighbor] = current_point
-                print(neighbor)
 
-    print("Path to goal:", calculate_path(start, goal, child_parent_pairs))
+    return {"path": calculate_path(start, goal, child_parent_pairs), "visited": visited, "grid": grid, "start": start,
+            "goal": goal}
 
 
 def main():
-    bfs()
+    res = bfs()
+    utils.visualize_asciimatics(res)
 
 
 if __name__ == '__main__':

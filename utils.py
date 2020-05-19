@@ -4,6 +4,24 @@ import numpy as np
 from asciimatics.screen import ManagedScreen
 
 
+# Grid could be a class, and get_neighbors one of its methods
+def get_neighbors(point, grid):
+    # possible movements, only up down left right, maybe diagonally should be an option?
+    dy, dx = [-1, 0, 1, 0], [0, 1, 0, -1]
+
+    neighbors = []
+    for i in range(len(dy)):
+        # possible neighbors
+        y, x = point[0] + dy[i], point[1] + dx[i]
+
+        # check if neighbors are within the grid
+        if 0 <= x < len(grid[0]) and 0 <= y < len(grid):
+            if grid[y, x] == " ":
+                neighbors.append((y, x))
+
+    return neighbors
+
+
 def new_grid(dim, fill=" "):
     return np.array([[f'{fill}' for _ in range(dim)] for _ in range(dim)])
 
