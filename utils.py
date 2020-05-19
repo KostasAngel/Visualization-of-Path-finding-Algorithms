@@ -5,9 +5,20 @@ from asciimatics.screen import ManagedScreen
 
 
 def calculate_path(start, goal, child_parent_pairs):
-    # if goal not in child_parent_pairs.values():
-    #     raise AssertionError("No route to goal (goal not in child_parent_pairs)")
+    """ Calculates the path to the goal from a child-parent dictionary.
+
+    :param dict child_parent_pairs: Dictionary containing information
+    :param tuple goal: Coordinates of goal point, e.g. (5, 5)
+    :param tuple start: Coordinates of start point, e.g. (0, 0)
+    :returns: List of points (tuples), from start to goal
+    """
+
+    # TODO is there a better way to check this?
+    if goal not in child_parent_pairs.keys():
+        raise AssertionError("No route to goal (goal not in child_parent_pairs)")
+
     reverse_path = [goal]
+
     while reverse_path[-1] != start:
         reverse_path.append(child_parent_pairs[reverse_path[-1]])
 
@@ -15,7 +26,14 @@ def calculate_path(start, goal, child_parent_pairs):
 
 
 # Grid could be a class, and get_neighbors one of its methods
-def get_neighbors(point, grid):
+def get_neighbors(point: tuple, grid: np.ndarray):
+    """ Finds the neighboring points of the point of interest.
+
+    :param point: The point whose neighbors are of interest, e.g. (0, 0)
+    :param grid: A numpy array representing the grid the point is situated on
+    :returns: List with (up to 4) points next to provided point
+    """
+
     # possible movements, only up down left right, maybe diagonally should be an option?
     dy, dx = [-1, 0, 1, 0], [0, 1, 0, -1]
 
@@ -32,7 +50,13 @@ def get_neighbors(point, grid):
     return neighbors
 
 
-def new_grid(dim, fill=" "):
+def new_grid(dim: int, fill: str = " "):
+    """ Creates a new square grid.
+
+    :param dim: The dimension of the side of the required square grid, e.g. 64
+    :param fill: A character representing each point in the grid, defaults to " "
+    :returns: A square ndarray with the required dimensions and fill
+    """
     return np.array([[f'{fill}' for _ in range(dim)] for _ in range(dim)])
 
 
