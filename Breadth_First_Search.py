@@ -4,17 +4,19 @@ import utils
 
 
 def calculate(grid, start, goal):
-    # double ended queue, to use as a FIFO queue
-    queue = deque([start])
+    queue = deque([start])  # double ended queue, to use as a FIFO queue
 
     visited = []
 
     child_parent_pairs = dict()
-    # todo stop when goal is reached
-    while queue:  # checks if queue is empty, stops when all points have been considered
-        current_point = queue.popleft()
 
-        visited.append(current_point)  # mark as visited
+    goal_reached = False
+
+    while queue and not goal_reached:  # stops when all points have been considered or when goal is reached
+
+        current_point = queue.popleft()  # get leftmost point in queue
+
+        visited.append(current_point)  # mark point as visited
 
         neighbors = utils.get_neighbors(current_point, grid)
 
@@ -22,6 +24,8 @@ def calculate(grid, start, goal):
             if neighbor not in visited and neighbor not in queue:  # check if already visited this point
                 queue.append(neighbor)
                 child_parent_pairs[neighbor] = current_point
+
+                goal_reached = neighbor == goal  # check if goal has been reached
 
     path = utils.calculate_path(start, goal, child_parent_pairs)
 
