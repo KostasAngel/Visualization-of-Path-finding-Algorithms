@@ -4,6 +4,16 @@ import numpy as np
 from asciimatics.screen import ManagedScreen
 
 
+def calculate_path(start, goal, child_parent_pairs):
+    # if goal not in child_parent_pairs.values():
+    #     raise AssertionError("No route to goal (goal not in child_parent_pairs)")
+    reverse_path = [goal]
+    while reverse_path[-1] != start:
+        reverse_path.append(child_parent_pairs[reverse_path[-1]])
+
+    return list(reversed(reverse_path))
+
+
 # Grid could be a class, and get_neighbors one of its methods
 def get_neighbors(point, grid):
     # possible movements, only up down left right, maybe diagonally should be an option?
