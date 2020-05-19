@@ -3,26 +3,15 @@ from collections import deque
 import utils
 
 
-def bfs():
-    grid_dim = 20
-    grid = utils.new_grid(grid_dim)
-
-    grid[:17, 4] = "+"
-    grid[1, 1:9] = "+"
-    grid[10, 6:18] = "+"
-    grid[10:, 7] = "+"
-
-    start = (0, 0)
-    goal = (17, 17)
-
+def calculate(grid, start, goal):
     # double ended queue, to use as a FIFO queue
     queue = deque([start])
 
     visited = []
 
     child_parent_pairs = dict()
-
-    while queue:  # checks if queue is empty
+    # todo stop when goal is reached
+    while queue:  # checks if queue is empty, stops when all points have been considered
         current_point = queue.popleft()
 
         visited.append(current_point)  # mark as visited
@@ -40,7 +29,14 @@ def bfs():
 
 
 def main():
-    res = bfs()
+    grid = utils.new_grid(20)
+
+    grid[:17, 4] = "+"
+    grid[1, 1:9] = "+"
+    grid[10, 6:18] = "+"
+    grid[10:, 7] = "+"
+
+    res = calculate(grid=grid, start=(0, 0), goal=(17, 17))
     utils.visualize_asciimatics(res)
 
 
