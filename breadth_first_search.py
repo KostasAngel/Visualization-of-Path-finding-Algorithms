@@ -14,7 +14,7 @@ def calculate(grid, start, goal):
 
     while queue and not goal_reached:  # stops when all points have been considered or when goal is reached
 
-        current_point = queue.popleft()  # get leftmost point in queue
+        current_point = queue.pop()  # get leftmost point in queue
 
         visited.append(current_point)  # mark point as visited
 
@@ -22,7 +22,7 @@ def calculate(grid, start, goal):
 
         for neighbor in neighbors:
             if neighbor not in visited and neighbor not in queue:  # check if already visited this point
-                queue.append(neighbor)
+                queue.appendleft(neighbor)
                 child_parent_pairs[neighbor] = current_point
 
                 goal_reached = neighbor == goal  # check if goal has been reached
