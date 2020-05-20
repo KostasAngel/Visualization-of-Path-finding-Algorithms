@@ -50,10 +50,10 @@ def get_neighbors(point: tuple, grid: np.ndarray):
     return neighbors
 
 
-def new_grid(dim: int, fill: str = " "):
+def new_grid(dim: int = 64, fill: str = " "):
     """ Creates a new square grid.
 
-    :param dim: The dimension of the side of the required square grid, e.g. 64
+    :param dim: The dimension of the side of the required square grid, defaults to 64
     :param fill: A character representing each point in the grid, defaults to " "
     :returns: A square ndarray with the required dimensions and fill
     """
