@@ -4,7 +4,7 @@ import utils
 
 
 def calculate(grid, start, goal):
-    queue = deque([start])  # double ended queue, to use as a FIFO queue
+    queue = deque([start])  # double ended queue
 
     visited = []
 
@@ -33,6 +33,7 @@ def calculate(grid, start, goal):
 
 
 def main():
+    # the code here is just for testing, the program can just call calculate() above and skip this
     grid = utils.new_grid(20)
 
     grid[:17, 4] = "+"
