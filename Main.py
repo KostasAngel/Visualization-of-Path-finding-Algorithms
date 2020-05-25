@@ -9,35 +9,90 @@ import utils
 qtcreator_file  = "mainWindow.ui" # Enter file here.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
 
+GRIDSIZE = 64
 
 class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
+    
+
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
-        self.runPathFinding.clicked.connect(self.showPressed)
+        self.runPathFinding.clicked.connect(self.runAlgorithm)
+        self.setCoordinates.clicked.connect(self.showCoordinates)
         scene = QtWidgets.QGraphicsScene()
         self.graphicsView.setScene(scene)
-        pen = QtGui.QPen(QtCore.Qt.black)
+        penGrid = QtGui.QPen(QtCore.Qt.black)
+        penPoint = QtGui.QPen(QtCore.Qt.red)
+        pointBrushEnd = QtGui.QBrush(QtCore.Qt.green)
+        pointBrushStart = QtGui.QBrush(QtCore.Qt.blue)
         side = 10
-
-        for i in range(64):
-            for j in range(64):
+        for i in range(GRIDSIZE):
+            for j in range(GRIDSIZE):
                 r = QtCore.QRectF(QtCore.QPointF(i*side, j*side), QtCore.QSizeF(side, side))
-                scene.addRect(r, pen)
+                scene.addRect(r, penGrid)
+        
+        
 
-    def showPressed(self):
+    
+    
+    def showCoordinates(self):
         Xstart = int(self.startXValue.toPlainText())
         Ystart = int(self.startYValue.toPlainText())
         Xgoal = int(self.goalXValue.toPlainText())
         Ygoal = int(self.goalYValue.toPlainText())
+        scene = QtWidgets.QGraphicsScene()
+        self.graphicsView.setScene(scene)
+        penGrid = QtGui.QPen(QtCore.Qt.black)
+        penPoint = QtGui.QPen(QtCore.Qt.red)
+        pointBrushEnd = QtGui.QBrush(QtCore.Qt.green)
+        pointBrushStart = QtGui.QBrush(QtCore.Qt.blue)
+        side = 10
+        for i in range(GRIDSIZE):
+            for j in range(GRIDSIZE):
+                r = QtCore.QRectF(QtCore.QPointF(i*side, j*side), QtCore.QSizeF(side, side))
+                scene.addRect(r, penGrid)
+        
+        
+        scene.addRect( int(Xstart * side), int( Ystart * side), 10,10 ,penPoint ,pointBrushStart)
+        scene.addRect( int(Xgoal * side),int( Ygoal * side), 10,10 ,penPoint ,pointBrushEnd)
+        
+    
+    def runAlgorithm(self):
+        Xstart = int(self.startXValue.toPlainText())
+        Ystart = int(self.startYValue.toPlainText())
+        Xgoal = int(self.goalXValue.toPlainText())
+        Ygoal = int(self.goalYValue.toPlainText())        
         startingPoint= (Xstart,Ystart)
         goalPoint = (Xgoal,Ygoal)
-        GRID = utils.new_grid(64) 
-        print("button is pressed. The values of the start are x: "+ str(Xstart) +" and Y: "+ str(Ystart))
-        result = bfsCalculate(GRID,startingPoint,goalPoint)
-        print(len(result["path"]))
-       
+        grid = utils.new_grid(GRIDSIZE) 
+
+        #Call Path Algorithm
+        result = bfsCalculate(grid,startingPoint,goalPoint)
+        Xstart = int(self.startXValue.toPlainText())
+        Ystart = int(self.startYValue.toPlainText())
+        Xgoal = int(self.goalXValue.toPlainText())
+        Ygoal = int(self.goalYValue.toPlainText())
+        scene = QtWidgets.QGraphicsScene()
+        self.graphicsView.setScene(scene)
+        penGrid = QtGui.QPen(QtCore.Qt.black)
+        penPoint = QtGui.QPen(QtCore.Qt.red)
+        pointBrushEnd = QtGui.QBrush(QtCore.Qt.green)
+        pointBrushStart = QtGui.QBrush(QtCore.Qt.blue)
+        side = 10
+        for i in range(GRIDSIZE):
+            for j in range(GRIDSIZE):
+                r = QtCore.QRectF(QtCore.QPointF(i*side, j*side), QtCore.QSizeF(side, side))
+                scene.addRect(r, penGrid)
+        scene.addRect( int(Xstart * side), int( Ystart * side), 10,10 ,penPoint ,pointBrushStart)
+        scene.addRect( int(Xgoal * side),int( Ygoal * side), 10,10 ,penPoint ,pointBrushEnd)
+        
+        #draw path
+        pointBrushPath = QtGui.QBrush(QtCore.Qt.black)
+        correctPath = result.get("path")
+        print(correctPath)
+        for x,y in correctPath:
+            scene.addRect( x*side, y*side , 10,10 ,penPoint ,pointBrushPath)
 
 
 
