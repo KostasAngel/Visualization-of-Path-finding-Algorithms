@@ -7,6 +7,13 @@ from asciimatics.screen import ManagedScreen
 
 
 class PriorityQueue(object):
+    """
+    Based on a combination of the following examples:
+
+    - https://stackoverflow.com/a/407922
+    - https://docs.python.org/3/library/heapq.html#priority-queue-implementation-notes
+    """
+
     def __init__(self):
         self.pq = []
         self.entry_finder = {}
