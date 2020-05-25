@@ -21,6 +21,7 @@ class PriorityQueue(object):
 
     def add_point(self, point, priority=0):  # priority in A* is the fScore
         if point in self.entry_finder:
+            # if point was already in queue it's deleted and re-added with newer priority
             del self.entry_finder[point]
         count = next(self.counter)
         entry = [priority, count, point]
@@ -39,7 +40,7 @@ class PriorityQueue(object):
     def has_points(self):
         return len(self.entry_finder) != 0
 
-    def pop_smallest_point(self):
+    def get_lowest_priority_point(self):
         """ Remove and return the point with the lowest priority.
 
         In case of multiple points with equal priority, the one entered
