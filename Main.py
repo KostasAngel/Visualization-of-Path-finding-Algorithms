@@ -1,5 +1,5 @@
 import sys
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from depth_first_search import calculate as dfsCalculate
 from breadth_first_search import calculate as bfsCalculate
 import utils
