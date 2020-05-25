@@ -1,7 +1,50 @@
+import itertools
+from heapq import heappop, heappush
 from time import sleep
 
 import numpy as np
 from asciimatics.screen import ManagedScreen
+
+
+class PriorityQueue(object):
+    def __init__(self):
+        self.pq = []
+        self.entry_finder = {}
+        self.counter = itertools.count()
+
+    def add_point(self, point, priority=0):  # priority in A* is the fScore
+        if point in self.entry_finder:
+            del self.entry_finder[point]
+        count = next(self.counter)
+        entry = [priority, count, point]
+        self.entry_finder[point] = entry
+        heappush(self.pq, entry)
+
+    def get_point_priority(self, point):
+        if point in self.entry_finder:
+            return self.entry_finder[point][1]
+        else:
+            raise KeyError("Point not in priority queue")
+
+    def has_point(self, point):
+        return point in self.entry_finder
+
+    def has_points(self):
+        return len(self.entry_finder) != 0
+
+    def pop_smallest_point(self):
+        """ Remove and return the point with the lowest priority.
+
+        In case of multiple points with equal priority, the one entered
+        first is returned.
+
+        :raises: KeyError if priority queue is empty
+        """
+        while self.pq:
+            priority, count, point = heappop(self.pq)
+            del self.entry_finder[point]
+            return point
+        raise KeyError("Pop from empty priority queue")
 
 
 def calculate_path(start, goal, child_parent_pairs):
