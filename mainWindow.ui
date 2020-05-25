@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>830</width>
-    <height>462</height>
+    <width>1098</width>
+    <height>775</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -208,10 +208,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="runPathFinding">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>310</y>
-      <width>81</width>
-      <height>61</height>
+      <x>70</x>
+      <y>380</y>
+      <width>181</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -256,7 +256,7 @@ p, li { white-space: pre-wrap; }
      <string>STEP 2: Enter the coordinates of the ending point</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="setRandomCoordinates">
     <property name="geometry">
      <rect>
       <x>170</x>
@@ -266,10 +266,8 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>   Random 
-coordinates
-and 
-Run</string>
+     <string>   Random
+coordinates</string>
     </property>
    </widget>
    <widget class="QLabel" name="labelAlgorithm_2">
@@ -294,10 +292,10 @@ Run</string>
    <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>90</y>
-      <width>256</width>
-      <height>256</height>
+      <x>400</x>
+      <y>40</y>
+      <width>660</width>
+      <height>660</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -328,36 +326,18 @@ Run</string>
      </brush>
     </property>
    </widget>
-   <widget class="QLabel" name="errorLabel">
+   <widget class="QPushButton" name="setCoordinates">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>370</y>
-      <width>461</width>
-      <height>41</height>
+      <x>70</x>
+      <y>310</y>
+      <width>81</width>
+      <height>61</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-      <underline>true</underline>
-      <stylestrategy>PreferDefault</stylestrategy>
-     </font>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="lineWidth">
-     <number>3</number>
-    </property>
     <property name="text">
-     <string/>
-    </property>
-    <property name="margin">
-     <number>0</number>
+     <string>Set 
+coordinates</string>
     </property>
    </widget>
   </widget>
@@ -366,7 +346,7 @@ Run</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>830</width>
+     <width>1098</width>
      <height>21</height>
     </rect>
    </property>
