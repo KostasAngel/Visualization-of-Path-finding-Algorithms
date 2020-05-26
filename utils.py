@@ -163,7 +163,7 @@ def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=
 
 def visualize_asciimatics(res):
     with ManagedScreen() as screen:
-
+        # print visited one by one
         for i in range(1, len(res["visited"])):
             grid = visualize_grid(res["grid"], visited=res["visited"][:i + 1], start=res["start"], goal=res["goal"])
 
@@ -171,9 +171,11 @@ def visualize_asciimatics(res):
                 screen.print_at(row, 0, j)
             screen.refresh()
             sleep(0.03)
-        grid = visualize_grid(res["grid"], visited=res["visited"][:i + 1], path=res["path"], start=res["start"],
+        # print path
+        grid = visualize_grid(res["grid"], visited=res["visited"], path=res["path"], start=res["start"],
                               goal=res["goal"])
         for j, row in enumerate(grid.split("\n")):
             screen.print_at(row, 0, j)
+
         screen.refresh()
         sleep(20)
