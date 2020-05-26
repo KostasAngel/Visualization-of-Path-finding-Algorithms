@@ -8,6 +8,11 @@ from asciimatics.screen import ManagedScreen
 
 class PriorityQueue(object):
     """
+
+    A counter is used to mark when each entry was inserted in the queue,
+    so that when more than one points have equal priority, the one
+    inserted first is returned.
+
     Based on a combination of the following examples:
 
     - https://stackoverflow.com/a/407922
@@ -22,8 +27,8 @@ class PriorityQueue(object):
     def add_point(self, point, priority=0):  # priority in A* is the fScore
         if point in self.entry_finder:
             # if point was already in queue it's deleted and re-added with newer priority
-            print("entry finder contents", self.entry_finder)
-            print("deleting entry", self.entry_finder[point])
+            # print("entry finder contents", self.entry_finder)
+            # print("deleting entry", self.entry_finder[point])
             del self.entry_finder[point]
         count = next(self.counter)
         entry = [priority, count, point]
@@ -51,7 +56,10 @@ class PriorityQueue(object):
         :raises: KeyError if priority queue is empty
         """
         while self.pq:
+            print(self.pq, "pq", flush=True)
+            print(self.entry_finder, "entry finder", flush=True)
             priority, count, point = heappop(self.pq)
+            print("popped point", point, priority, count, "\n", flush=True)
             # del self.entry_finder[point]
             return point
         raise KeyError("Pop from empty priority queue")
