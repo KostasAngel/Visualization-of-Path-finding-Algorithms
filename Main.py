@@ -1,11 +1,11 @@
-import sys
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
+import sys, random
+from PyQt5 import QtCore, QtGui, QtWidgets, uic, QtTest
 from PyQt5.QtWidgets import QGraphicsScene, QGraphicsView
 from PyQt5.QtCore import Qt
 from depth_first_search import calculate as dfsCalculate
 from breadth_first_search import calculate as bfsCalculate
 import utils
-import random
+from threading import Timer
 
 
 qtcreator_file  = "mainWindow.ui" # Enter file here.
@@ -111,12 +111,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 result = dfsCalculate(grid,startingPoint,goalPoint)
         else :
                 result = bfsCalculate(grid,startingPoint,goalPoint)
-                
-
-
-        #Call Path Algorithm
-        #result = bfsCalculate(grid,startingPoint,goalPoint)
-        
+                        
         #enable scene to draw
         scene = QtWidgets.QGraphicsScene()
         self.graphicsView.setScene(scene)
@@ -137,9 +132,12 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         correctPath = result.get("path")
         visited = result.get("visited")
         #print (visited)
+        scene.addRect( int(Xstart * side), int( Ystart * side), 10,10 ,penPoint ,pointBrushStart)
+        scene.addRect( int(Xgoal * side),int( Ygoal * side), 10,10 ,penPoint ,pointBrushEnd)
         for x,y in visited:
+            QtTest.QTest.qWait(5)
             scene.addRect( x*side, y*side , 10,10 ,penVisited ,pointBrushvisited)
-
+            scene.addRect( int(Xstart * side), int( Ystart * side), 10,10 ,penPoint ,pointBrushStart)
         #print (correctPath)
         for x,y in correctPath:
             scene.addRect( x*side, y*side , 10,10 ,penPoint ,pointBrushPath)
