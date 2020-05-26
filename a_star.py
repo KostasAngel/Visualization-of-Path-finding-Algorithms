@@ -15,9 +15,8 @@ def calculate(grid, start, goal, h="manhattan"):
     g_scores = dict()
     g_scores[start] = 0
 
-    # f(n) = g(n) + h(n)
-    f_scores = dict()
-    f_scores[start] = h_score(start, goal)
+    f_scores = dict()  # the f_score is calculated by f(n) = g(n) + h(n)
+    f_scores[start] = h_score(start, goal)  # the g_score of start is 0
 
     pq = utils.PriorityQueue()
     pq.add_point(start, f_scores[start])  # add start to priority queue
@@ -29,7 +28,8 @@ def calculate(grid, start, goal, h="manhattan"):
         visited.append(current_point)
 
         if current_point == goal:
-            break
+            path = utils.calculate_path(start, goal, child_parent_pairs)
+            return {"path": path, "visited": visited, "grid": grid, "start": start, "goal": goal}
 
         for neighbor in utils.get_neighbors(current_point, grid):
             tentative_g_score = g_scores[current_point] + 1  # neighbors always 1 step away from current
@@ -43,10 +43,6 @@ def calculate(grid, start, goal, h="manhattan"):
             g_scores[neighbor] = tentative_g_score
             f_scores[neighbor] = g_scores[neighbor] + h_score(neighbor, goal)
             pq.add_point(neighbor, f_scores[neighbor])
-
-    path = utils.calculate_path(start, goal, child_parent_pairs)
-
-    return {"path": path, "visited": visited, "grid": grid, "start": start, "goal": goal}
 
 
 def manhattan_distance(a: tuple, b: tuple):

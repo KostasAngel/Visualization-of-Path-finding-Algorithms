@@ -22,6 +22,8 @@ class PriorityQueue(object):
     def add_point(self, point, priority=0):  # priority in A* is the fScore
         if point in self.entry_finder:
             # if point was already in queue it's deleted and re-added with newer priority
+            print("entry finder contents", self.entry_finder)
+            print("deleting entry", self.entry_finder[point])
             del self.entry_finder[point]
         count = next(self.counter)
         entry = [priority, count, point]
@@ -50,7 +52,7 @@ class PriorityQueue(object):
         """
         while self.pq:
             priority, count, point = heappop(self.pq)
-            del self.entry_finder[point]
+            # del self.entry_finder[point]
             return point
         raise KeyError("Pop from empty priority queue")
 
