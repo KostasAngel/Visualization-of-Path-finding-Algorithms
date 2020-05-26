@@ -7,6 +7,7 @@ from breadth_first_search import calculate as bfsCalculate
 import utils
 import random
 
+
 qtcreator_file  = "mainWindow.ui" # Enter file here.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
 
@@ -120,8 +121,9 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         scene = QtWidgets.QGraphicsScene()
         self.graphicsView.setScene(scene)
         penGrid = QtGui.QPen(QtCore.Qt.black)
-        penVisited = QtGui.QPen(QtCore.Qt.darkMagenta)
-        penPoint = QtGui.QPen(QtCore.Qt.red)
+        penVisited = QtGui.QPen(QtCore.Qt.darkRed)
+        penPoint = QtGui.QPen(QtCore.Qt.white)
+        pointBrushvisited =  QtGui.QBrush(QtCore.Qt.white)
         pointBrushEnd = QtGui.QBrush(QtCore.Qt.green)
         pointBrushStart = QtGui.QBrush(QtCore.Qt.blue)
         #Draw grid
@@ -136,7 +138,8 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         visited = result.get("visited")
         #print (visited)
         for x,y in visited:
-            scene.addRect( x*side, y*side , 10,10 ,penVisited ,pointBrushPath)
+            scene.addRect( x*side, y*side , 10,10 ,penVisited ,pointBrushvisited)
+
         #print (correctPath)
         for x,y in correctPath:
             scene.addRect( x*side, y*side , 10,10 ,penPoint ,pointBrushPath)
