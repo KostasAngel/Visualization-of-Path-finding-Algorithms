@@ -23,6 +23,9 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.runPathFinding.clicked.connect(self.runAlgorithm)
         self.setCoordinates.clicked.connect(self.showCoordinates)
         self.setRandomCoordinates.clicked.connect(self.randomCoordinates)
+        #Combobox
+        self.chooseAlgorithm.addItem("Depth First Search")
+        self.chooseAlgorithm.addItem("Breadth First Search")        
         #Visual UI
         scene = QtWidgets.QGraphicsScene()
         self.graphicsView.setScene(scene)
@@ -63,10 +66,12 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         scene.addRect( int(Xgoal * side),int( Ygoal * side), 10,10 ,penPoint ,pointBrushEnd)
         
     def randomCoordinates(self):
+        #Chose Random value
         Xstart = int(random.uniform(0,64))
         Ystart = int(random.uniform(0,64))
         Xgoal = int(random.uniform(0,64))
         Ygoal = int(random.uniform(0,64)) 
+        #add Random value to text inputs
         self.startXValue.setPlainText(str(Xstart))
         self.startYValue.setPlainText(str(Ystart))
         self.goalXValue.setPlainText(str(Xgoal))
@@ -100,8 +105,16 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         startingPoint= (Xstart,Ystart)
         goalPoint = (Xgoal,Ygoal)
         grid = utils.new_grid(GRIDSIZE) 
+        text= self.chooseAlgorithm.currentText()
+        if text == "Depth First Search":
+                result = dfsCalculate(grid,startingPoint,goalPoint)
+        else :
+                result = bfsCalculate(grid,startingPoint,goalPoint)
+                
+
+
         #Call Path Algorithm
-        result = bfsCalculate(grid,startingPoint,goalPoint)
+        #result = bfsCalculate(grid,startingPoint,goalPoint)
         
         #enable scene to draw
         scene = QtWidgets.QGraphicsScene()

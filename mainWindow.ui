@@ -234,7 +234,7 @@ p, li { white-space: pre-wrap; }
      </font>
     </property>
     <property name="text">
-     <string>STEP 1: Enter the coordinates of the starting point</string>
+     <string>STEP 1: Coordinates of the starting point [Blue]</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
@@ -253,7 +253,7 @@ p, li { white-space: pre-wrap; }
      </font>
     </property>
     <property name="text">
-     <string>STEP 2: Enter the coordinates of the ending point</string>
+     <string>STEP 2: Coordinates of the ending point [Green]</string>
     </property>
    </widget>
    <widget class="QPushButton" name="setRandomCoordinates">
