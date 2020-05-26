@@ -84,8 +84,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             for j in range(GRIDSIZE):
                 r = QtCore.QRectF(QtCore.QPointF(i*side, j*side), QtCore.QSizeF(side, side))
                 scene.addRect(r, penGrid)
-        scene.addRect( int(Xstart * side), int( Ystart * side), 10,10 ,penPoint ,pointBrushStart)
-        scene.addRect( int(Xgoal * side),int( Ygoal * side), 10,10 ,penPoint ,pointBrushEnd)
+        
         
         #draw path
         pointBrushPath = QtGui.QBrush(QtCore.Qt.black)
@@ -93,7 +92,8 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print(correctPath)
         for x,y in correctPath:
             scene.addRect( x*side, y*side , 10,10 ,penPoint ,pointBrushPath)
-
+        scene.addRect( int(Xstart * side), int( Ystart * side), 10,10 ,penPoint ,pointBrushStart)
+        scene.addRect( int(Xgoal * side),int( Ygoal * side), 10,10 ,penPoint ,pointBrushEnd)
 
 
 
