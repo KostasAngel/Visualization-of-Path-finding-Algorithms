@@ -76,6 +76,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         scene = QtWidgets.QGraphicsScene()
         self.graphicsView.setScene(scene)
         penGrid = QtGui.QPen(QtCore.Qt.black)
+        penVisited = QtGui.QPen(QtCore.Qt.darkMagenta)
         penPoint = QtGui.QPen(QtCore.Qt.red)
         pointBrushEnd = QtGui.QBrush(QtCore.Qt.green)
         pointBrushStart = QtGui.QBrush(QtCore.Qt.blue)
@@ -89,7 +90,10 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #draw path
         pointBrushPath = QtGui.QBrush(QtCore.Qt.black)
         correctPath = result.get("path")
-        print(correctPath)
+        visited = result.get("visited")
+        print (visited)
+        for x,y in visited:
+            scene.addRect( x*side, y*side , 10,10 ,penVisited ,pointBrushPath)
         for x,y in correctPath:
             scene.addRect( x*side, y*side , 10,10 ,penPoint ,pointBrushPath)
         scene.addRect( int(Xstart * side), int( Ystart * side), 10,10 ,penPoint ,pointBrushStart)
