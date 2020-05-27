@@ -19,7 +19,7 @@ def calculate(grid, start, goal, h="manhattan"):
     f_scores[start] = g_scores[start] + h_score(start, goal)  # the g_score of start is 0
 
     pq = utils.PriorityQueue()
-    pq.add_point(start, f_scores[start])  # add start to priority queue
+    pq.add_point(start, f_scores[start])  # add start to priority queue, priority in A* corresponds to the fScore
 
     while pq.has_points():
         # get point with lowest priority and remove from queue
@@ -31,11 +31,8 @@ def calculate(grid, start, goal, h="manhattan"):
             path = utils.calculate_path(start, goal, child_parent_pairs)
             return {"path": path, "visited": visited, "grid": grid, "start": start, "goal": goal}
 
-        print(len(pq))
         for neighbor in utils.get_neighbors(current_point, grid):
             tentative_g_score = g_scores[current_point] + 1  # neighbors always 1 step away from current
-            print("current_point", current_point, "gscore", g_scores[current_point], "neighbor", neighbor,"tentative",
-                  tentative_g_score)
             if neighbor in g_scores and g_scores[neighbor] < tentative_g_score:
                 # neighbor already reached from another point that resulted in a lower g_score, so skip it
                 continue
@@ -67,14 +64,13 @@ def main():
     # the code here is just for testing, the program can just call calculate() above and skip this
     grid = utils.new_grid(20)
 
-    # grid[:17, 4] = "+"
-    # grid[1, 1:9] = "+"
-    # grid[10, 6:18] = "+"
-    # grid[10:, 7] = "+"
+    grid[:17, 4] = "+"
+    grid[1, 1:9] = "+"
+    grid[10, 6:18] = "+"
+    grid[10:, 7] = "+"
 
-    res = calculate(grid=grid, start=(0, 0), goal=(17, 17))
+    res = calculate(grid=grid, start=(0, 0), goal=(17, 17), h="manhattan")
     utils.visualize_asciimatics(res)
-    # print(manhattan_distance((0, 0), (17, 17)))
 
 
 if __name__ == '__main__':
