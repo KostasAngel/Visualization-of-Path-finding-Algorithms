@@ -4,8 +4,17 @@ import utils
 
 
 def calculate(grid, start, goal, h="manhattan"):
-    # Implementation of this algorithm was based on the example provided in Wikipedia:
-    # https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode
+    """ Finds path from start to goal using the A* algorithm.
+
+    Implementation of this algorithm was based on the example provided in Wikipedia:
+    https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode
+
+    :param grid: A numpy array representing the grid where start and goal are located.
+    :param start: A tuple representing the starting point, e.g. (0, 0).
+    :param goal: A tuple representing the goal point, e.g. (10, 10).
+    :param h: The heuristic the algorithm will use, defaults to the Manhattan distance. Currently options "manhattan"
+     and "euclidean" are supported.
+    """
 
     if h == "manhattan":
         h_score = manhattan_distance
