@@ -7,7 +7,16 @@ from asciimatics.screen import ManagedScreen
 
 
 class PriorityQueue(object):
-    """
+    """ Priority queue that supports setting the priority of entries,
+    allows updating of entries, and has built-in tie-breaking capabilities,
+    i.e. when two entries have the same priority, the one added earlier is
+    returned.
+
+    Since it is not easy to replace an entry in the heap, they are
+    instead marked as REMOVED in the separate entry_finder dictionary,
+    and an updated entry is placed in the heap. REMOVED entries are
+    filtered out when they are popped from the heap, and are found to
+    be marked as such.
 
     A counter is used to mark when each entry was inserted in the queue,
     so that when more than one points have equal priority, the one
