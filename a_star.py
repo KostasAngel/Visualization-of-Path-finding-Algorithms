@@ -1,9 +1,11 @@
 import math
 
+import numpy as np
+
 import utils
 
 
-def calculate(grid, start, goal, heuristic="manhattan"):
+def calculate(grid: np.ndarray, start: tuple, goal: tuple, heuristic: str = "manhattan"):
     """ Finds path from start to goal using the A* algorithm.
 
     Implementation of this algorithm was based on the example provided in Wikipedia:
