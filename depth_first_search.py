@@ -1,11 +1,22 @@
 from collections import deque
 
+import numpy as np
+
 import utils
 
 
-def calculate(grid, start, goal):
-    # Create a double ended queue. By always appending to the right of the queue, and then considering the right-most
-    # points in the queue first, the deque works as a LIFO queue/stack
+def calculate(grid: np.ndarray, start: tuple, goal: tuple):
+    """ Finds path from start to goal using the Depth-First Search algorithm.
+
+    Works by creating a double ended queue (deque) - by always appending to the **right** of the queue,
+    and then considering the **right-most** points in the queue first, the deque essentially works as a LIFO
+    queue/stack.
+
+    :param grid: A numpy array representing the grid where start and goal are located.
+    :param start: A tuple representing the starting point, e.g. (0, 0).
+    :param goal: A tuple representing the goal point, e.g. (10, 10).
+    """
+
     queue = deque([start])
 
     visited = []
@@ -43,6 +54,8 @@ def main():
     grid[10:, 7] = "+"
 
     res = calculate(grid=grid, start=(0, 0), goal=(17, 17))
+
+    # the following allows visualizing results in the terminal (thus only works when script is run from the terminal)
     utils.visualize_asciimatics(res)
 
 
