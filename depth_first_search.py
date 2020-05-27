@@ -4,28 +4,29 @@ import utils
 
 
 def calculate(grid, start, goal):
-    queue = deque([start])  # double ended queue
+    # Create a double ended queue. By always appending to the right of the queue, and then considering the right-most
+    # points in the queue first, the deque works as a LIFO queue/stack
+    queue = deque([start])
 
     visited = []
 
     child_parent_pairs = dict()
 
-    goal_reached = False
+    while queue:  # stops when all points have been considered or when goal is reached
 
-    while queue and not goal_reached:  # stops when all points have been considered or when goal is reached
-
-        current_point = queue.pop()  # get last point in queue
+        current_point = queue.pop()  # get right-most point in queue
 
         visited.append(current_point)  # mark point as visited
 
-        neighbors = utils.get_neighbors(current_point, grid)
+        if current_point == goal:
+            # goal has been reached
+            # do not return from here, by returning below the case where no path is found is captured
+            break
 
-        for neighbor in neighbors:
+        for neighbor in utils.get_neighbors(current_point, grid):
             if neighbor not in visited:  # check if already visited this point
-                queue.append(neighbor)
+                queue.append(neighbor)  # append to the right of the queue
                 child_parent_pairs[neighbor] = current_point
-
-                goal_reached = neighbor == goal  # check if goal has been reached
 
     path = utils.calculate_path(start, goal, child_parent_pairs)
 
