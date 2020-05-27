@@ -41,7 +41,7 @@ class PriorityQueue(object):
 
         :param point: Point to be added in the queue.
         :param priority: Priority of the point, e.g. for A* this is
-        equivalent to the fScore.
+         equivalent to the fScore.
         """
         if point in self.entry_finder:
             self.remove_point(point)
