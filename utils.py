@@ -1,7 +1,70 @@
+import itertools
+from heapq import heappop, heappush
 from time import sleep
 
 import numpy as np
 from asciimatics.screen import ManagedScreen
+
+
+class PriorityQueue(object):
+    """ Priority queue that supports setting the priority of entries,
+    allows updating of entries, and has built-in tie-breaking capabilities,
+    i.e. when two entries have the same priority, the one added earlier is
+    returned.
+
+    Since it is not easy to replace an entry in the heap, they are
+    instead marked as REMOVED in the separate entry_finder dictionary,
+    and an updated entry is placed in the heap. REMOVED entries are
+    filtered out when they are popped from the heap, and are found to
+    be marked as such.
+
+    A counter is used to mark when each entry was inserted in the queue,
+    so that when more than one points have equal priority, the one
+    inserted first is returned.
+
+    Based on a combination of the following examples:
+
+    - https://stackoverflow.com/a/407922
+    - https://docs.python.org/3/library/heapq.html#priority-queue-implementation-notes
+    """
+
+    def __init__(self):
+        self.pq = []
+        self.entry_finder = {}
+        self.counter = itertools.count()
+        self.REMOVED = '<removed-task>'
+
+    def add_point(self, point, priority=0):
+        if point in self.entry_finder:
+            self.remove_point(point)
+        count = next(self.counter)
+        entry = [priority, count, point]
+        self.entry_finder[point] = entry
+        heappush(self.pq, entry)
+
+    def remove_point(self, point):
+        # This relies on the fact that an entry in entry_finder is the exact same in memory as the one in the heap,
+        # so by editing it here, it is edited in the heap as well.
+        entry = self.entry_finder.pop(point)
+        entry[-1] = self.REMOVED
+
+    def has_points(self):
+        return len(self.entry_finder) != 0
+
+    def get_lowest_priority_point(self):
+        """ Remove and return the point with the lowest priority.
+
+        In case of multiple points with equal priority, the one entered
+        first is returned.
+
+        :raises: KeyError if priority queue is empty
+        """
+        while self.pq:
+            priority, count, point = heappop(self.pq)
+            if point is not self.REMOVED:
+                del self.entry_finder[point]
+                return point
+        raise KeyError("Pop from empty priority queue")
 
 
 def calculate_path(start, goal, child_parent_pairs):
@@ -50,10 +113,10 @@ def get_neighbors(point: tuple, grid: np.ndarray):
     return neighbors
 
 
-def new_grid(dim: int, fill: str = " "):
+def new_grid(dim: int = 64, fill: str = " "):
     """ Creates a new square grid.
 
-    :param dim: The dimension of the side of the required square grid, e.g. 64
+    :param dim: The dimension of the side of the required square grid, defaults to 64
     :param fill: A character representing each point in the grid, defaults to " "
     :returns: A square ndarray with the required dimensions and fill
     """
@@ -102,7 +165,7 @@ def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=
 
 def visualize_asciimatics(res):
     with ManagedScreen() as screen:
-
+        # print visited one by one
         for i in range(1, len(res["visited"])):
             grid = visualize_grid(res["grid"], visited=res["visited"][:i + 1], start=res["start"], goal=res["goal"])
 
@@ -110,9 +173,11 @@ def visualize_asciimatics(res):
                 screen.print_at(row, 0, j)
             screen.refresh()
             sleep(0.03)
-        grid = visualize_grid(res["grid"], visited=res["visited"][:i + 1], path=res["path"], start=res["start"],
+        # print path
+        grid = visualize_grid(res["grid"], visited=res["visited"], path=res["path"], start=res["start"],
                               goal=res["goal"])
         for j, row in enumerate(grid.split("\n")):
             screen.print_at(row, 0, j)
+
         screen.refresh()
         sleep(20)
