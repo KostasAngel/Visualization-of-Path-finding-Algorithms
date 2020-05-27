@@ -34,7 +34,15 @@ class PriorityQueue(object):
         self.counter = itertools.count()
         self.REMOVED = '<removed-task>'
 
-    def add_point(self, point, priority=0):
+    def add_point(self, point: tuple, priority: float = 0):
+        """ Adds point to the priority queue, if it doesn't already
+        exist in it. If the point already exists, the old entry is
+        marked as removed, and the point is re-added to the queue.
+
+        :param point: Point to be added in the queue.
+        :param priority: Priority of the point, e.g. for A* this is
+         equivalent to the fScore.
+        """
         if point in self.entry_finder:
             self.remove_point(point)
         count = next(self.counter)
@@ -43,8 +51,9 @@ class PriorityQueue(object):
         heappush(self.pq, entry)
 
     def remove_point(self, point):
-        # This relies on the fact that an entry in entry_finder is the exact same in memory as the one in the heap,
-        # so by editing it here, it is edited in the heap as well.
+        # For internal use in the class. "Removing" an entry from the priority queue is done simply by marking it
+        # REMOVED. Doing so relies on the fact that an entry in entry_finder is the exact same in memory as the one in
+        # the heap, so by editing it here, it is edited in the heap as well.
         entry = self.entry_finder.pop(point)
         entry[-1] = self.REMOVED
 
@@ -52,7 +61,8 @@ class PriorityQueue(object):
         return len(self.entry_finder) != 0
 
     def get_lowest_priority_point(self):
-        """ Remove and return the point with the lowest priority.
+        """ Removes and returns the point with the lowest priority in
+        the queue.
 
         In case of multiple points with equal priority, the one entered
         first is returned.
@@ -92,9 +102,9 @@ def calculate_path(start, goal, child_parent_pairs):
 def get_neighbors(point: tuple, grid: np.ndarray):
     """ Finds the neighboring points of the point of interest.
 
-    :param point: The point whose neighbors are of interest, e.g. (0, 0)
-    :param grid: A numpy array representing the grid the point is situated on
-    :returns: List with (up to 4) points next to provided point
+    :param point: The point whose neighbors are of interest, e.g. (0, 0).
+    :param grid: A numpy array representing the grid the point is situated on.
+    :returns: List with (up to 4) points next to provided point.
     """
 
     # possible movements, only up down left right, maybe diagonally should be an option?
@@ -116,9 +126,9 @@ def get_neighbors(point: tuple, grid: np.ndarray):
 def new_grid(dim: int = 64, fill: str = " "):
     """ Creates a new square grid.
 
-    :param dim: The dimension of the side of the required square grid, defaults to 64
-    :param fill: A character representing each point in the grid, defaults to " "
-    :returns: A square ndarray with the required dimensions and fill
+    :param dim: The dimension of the side of the required square grid, defaults to 64.
+    :param fill: A character representing each point in the grid, defaults to " ".
+    :returns: A square ndarray with the required dimensions and fill.
     """
     return np.array([[f'{fill}' for _ in range(dim)] for _ in range(dim)])
 

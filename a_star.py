@@ -1,16 +1,30 @@
 import math
 
+import numpy as np
+
 import utils
 
 
-def calculate(grid, start, goal, h="manhattan"):
-    # Implementation of this algorithm was based on the example provided in Wikipedia:
-    # https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode
+def calculate(grid: np.ndarray, start: tuple, goal: tuple, heuristic: str = "manhattan"):
+    """ Finds path from start to goal using the A* algorithm.
 
-    # TODO make this more general, raise error if input not acceptable
-    h_score = manhattan_distance if h == "manhattan" else euclidean_distance
+    Implementation of this algorithm was based on the example provided in Wikipedia:
+    https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode
 
-    # TODO distinction between visited and considered
+    :param grid: A numpy array representing the grid where start and goal are located.
+    :param start: A tuple representing the starting point, e.g. (0, 0).
+    :param goal: A tuple representing the goal point, e.g. (10, 10).
+    :param heuristic: The heuristic the algorithm will use, defaults to the Manhattan distance. Currently options
+     "manhattan" and "euclidean" are supported.
+    """
+
+    if heuristic == "manhattan":
+        h_score = manhattan_distance
+    elif heuristic == "euclidean":
+        h_score = euclidean_distance
+    else:
+        raise NameError("Heuristic name provided not applicable/erroneous.")
+
     visited = []
 
     child_parent_pairs = dict()
@@ -21,8 +35,10 @@ def calculate(grid, start, goal, h="manhattan"):
     f_scores = dict()  # the f_score is calculated by f(n) = g(n) + h(n)
     f_scores[start] = g_scores[start] + h_score(start, goal)  # the g_score of start is 0
 
+    # create a priority queue, and add start to it; priority in A* corresponds to the fScore, and the points with
+    # lowest fScores are considered first
     pq = utils.PriorityQueue()
-    pq.add_point(start, f_scores[start])  # add start to priority queue, priority in A* corresponds to the fScore
+    pq.add_point(start, f_scores[start])
 
     while pq.has_points():
         # get point with lowest priority and remove from queue
@@ -31,8 +47,9 @@ def calculate(grid, start, goal, h="manhattan"):
         visited.append(current_point)
 
         if current_point == goal:
-            path = utils.calculate_path(start, goal, child_parent_pairs)
-            return {"path": path, "visited": visited, "grid": grid, "start": start, "goal": goal}
+            # goal has been reached
+            # do not return from here, by returning below the case where no path is found is captured
+            break
 
         for neighbor in utils.get_neighbors(current_point, grid):
             tentative_g_score = g_scores[current_point] + 1  # neighbors always 1 step away from current
@@ -45,6 +62,10 @@ def calculate(grid, start, goal, h="manhattan"):
             g_scores[neighbor] = tentative_g_score
             f_scores[neighbor] = tentative_g_score + h_score(neighbor, goal)
             pq.add_point(neighbor, f_scores[neighbor])
+
+    path = utils.calculate_path(start, goal, child_parent_pairs)
+
+    return {"path": path, "visited": visited, "grid": grid, "start": start, "goal": goal}
 
 
 def manhattan_distance(a: tuple, b: tuple):
@@ -72,7 +93,9 @@ def main():
     grid[10, 6:18] = "+"
     grid[10:, 7] = "+"
 
-    res = calculate(grid=grid, start=(0, 0), goal=(17, 17), h="manhattan")
+    res = calculate(grid=grid, start=(0, 0), goal=(17, 17), heuristic="manhattan")
+
+    # the following allows visualizing results in the terminal (thus only works when script is run from the terminal)
     utils.visualize_asciimatics(res)
 
 
