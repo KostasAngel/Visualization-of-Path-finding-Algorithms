@@ -23,26 +23,21 @@ class PriorityQueue(object):
         self.pq = []
         self.entry_finder = {}
         self.counter = itertools.count()
+        self.REMOVED = '<removed-task>'
 
-    def add_point(self, point, priority=0):  # priority in A* is the fScore
+    def add_point(self, point, priority=0):
         if point in self.entry_finder:
-            # if point was already in queue it's deleted and re-added with newer priority
-            # print("entry finder contents", self.entry_finder)
-            # print("deleting entry", self.entry_finder[point])
-            del self.entry_finder[point]
+            self.remove_point(point)
         count = next(self.counter)
         entry = [priority, count, point]
         self.entry_finder[point] = entry
         heappush(self.pq, entry)
 
-    def get_point_priority(self, point):
-        if point in self.entry_finder:
-            return self.entry_finder[point][1]
-        else:
-            raise KeyError("Point not in priority queue")
-
-    def has_point(self, point):
-        return point in self.entry_finder
+    def remove_point(self, point):
+        # This relies on the fact that an entry in entry_finder is the exact same in memory as the one in the heap,
+        # so by editing it here, it is edited in the heap as well.
+        entry = self.entry_finder.pop(point)
+        entry[-1] = self.REMOVED
 
     def has_points(self):
         return len(self.entry_finder) != 0
@@ -56,12 +51,10 @@ class PriorityQueue(object):
         :raises: KeyError if priority queue is empty
         """
         while self.pq:
-            print(self.pq, "pq", flush=True)
-            print(self.entry_finder, "entry finder", flush=True)
             priority, count, point = heappop(self.pq)
-            print("popped point", point, priority, count, "\n", flush=True)
-            # del self.entry_finder[point]
-            return point
+            if point is not self.REMOVED:
+                del self.entry_finder[point]
+                return point
         raise KeyError("Pop from empty priority queue")
 
 
