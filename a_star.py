@@ -7,7 +7,6 @@ def calculate(grid, start, goal, h="manhattan"):
     # Implementation of this algorithm was based on the example provided in Wikipedia:
     # https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode
 
-    h_score = None
     if h == "manhattan":
         h_score = manhattan_distance
     elif h == "euclidean":
