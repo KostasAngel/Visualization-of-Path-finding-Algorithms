@@ -35,8 +35,10 @@ def calculate(grid: np.ndarray, start: tuple, goal: tuple, heuristic: str = "man
     f_scores = dict()  # the f_score is calculated by f(n) = g(n) + h(n)
     f_scores[start] = g_scores[start] + h_score(start, goal)  # the g_score of start is 0
 
+    # create a priority queue, and add start to it; priority in A* corresponds to the fScore, and the points with
+    # lowest fScores are considered first
     pq = utils.PriorityQueue()
-    pq.add_point(start, f_scores[start])  # add start to priority queue, priority in A* corresponds to the fScore
+    pq.add_point(start, f_scores[start])
 
     while pq.has_points():
         # get point with lowest priority and remove from queue
