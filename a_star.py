@@ -45,8 +45,9 @@ def calculate(grid: np.ndarray, start: tuple, goal: tuple, heuristic: str = "man
         visited.append(current_point)
 
         if current_point == goal:
-            path = utils.calculate_path(start, goal, child_parent_pairs)
-            return {"path": path, "visited": visited, "grid": grid, "start": start, "goal": goal}
+            # goal has been reached
+            # do not return from here, by returning below the case where no path is found is captured
+            break
 
         for neighbor in utils.get_neighbors(current_point, grid):
             tentative_g_score = g_scores[current_point] + 1  # neighbors always 1 step away from current
@@ -59,6 +60,10 @@ def calculate(grid: np.ndarray, start: tuple, goal: tuple, heuristic: str = "man
             g_scores[neighbor] = tentative_g_score
             f_scores[neighbor] = tentative_g_score + h_score(neighbor, goal)
             pq.add_point(neighbor, f_scores[neighbor])
+
+    path = utils.calculate_path(start, goal, child_parent_pairs)
+
+    return {"path": path, "visited": visited, "grid": grid, "start": start, "goal": goal}
 
 
 def manhattan_distance(a: tuple, b: tuple):
@@ -87,6 +92,8 @@ def main():
     grid[10:, 7] = "+"
 
     res = calculate(grid=grid, start=(0, 0), goal=(17, 17), heuristic="manhattan")
+
+    # the following allows visualizing results in the terminal (thus only works when script is run from the terminal)
     utils.visualize_asciimatics(res)
 
 
