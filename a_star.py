@@ -3,7 +3,7 @@ import math
 import utils
 
 
-def calculate(grid, start, goal, h="manhattan"):
+def calculate(grid, start, goal, heuristic="manhattan"):
     """ Finds path from start to goal using the A* algorithm.
 
     Implementation of this algorithm was based on the example provided in Wikipedia:
@@ -12,13 +12,13 @@ def calculate(grid, start, goal, h="manhattan"):
     :param grid: A numpy array representing the grid where start and goal are located.
     :param start: A tuple representing the starting point, e.g. (0, 0).
     :param goal: A tuple representing the goal point, e.g. (10, 10).
-    :param h: The heuristic the algorithm will use, defaults to the Manhattan distance. Currently options "manhattan"
-     and "euclidean" are supported.
+    :param heuristic: The heuristic the algorithm will use, defaults to the Manhattan distance. Currently options
+     "manhattan" and "euclidean" are supported.
     """
 
-    if h == "manhattan":
+    if heuristic == "manhattan":
         h_score = manhattan_distance
-    elif h == "euclidean":
+    elif heuristic == "euclidean":
         h_score = euclidean_distance
     else:
         raise NameError("Heuristic name provided not applicable/erroneous.")
@@ -84,7 +84,7 @@ def main():
     grid[10, 6:18] = "+"
     grid[10:, 7] = "+"
 
-    res = calculate(grid=grid, start=(0, 0), goal=(17, 17), h="manhattan")
+    res = calculate(grid=grid, start=(0, 0), goal=(17, 17), heuristic="manhattan")
     utils.visualize_asciimatics(res)
 
 
