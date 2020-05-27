@@ -7,10 +7,14 @@ def calculate(grid, start, goal, h="manhattan"):
     # Implementation of this algorithm was based on the example provided in Wikipedia:
     # https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode
 
-    # TODO make this more general, raise error if input not acceptable
-    h_score = manhattan_distance if h == "manhattan" else euclidean_distance
+    h_score = None
+    if h == "manhattan":
+        h_score = manhattan_distance
+    elif h == "euclidean":
+        h_score = euclidean_distance
+    else:
+        raise NameError("Heuristic name provided not applicable/erroneous.")
 
-    # TODO distinction between visited and considered
     visited = []
 
     child_parent_pairs = dict()
