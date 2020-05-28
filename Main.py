@@ -13,6 +13,11 @@ Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
 
 GRIDSIZE = 64
 
+# dictionary with implemented algorithms, when adding a new one we can update the dict only once
+ALGORITHMS = {"Breadth First Search": bfsCalculate,
+              "Depth First Search": dfsCalculate,
+              "Dijkstra's Algorithm": djkCalculate}
+
 
 class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
@@ -25,9 +30,8 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setCoordinates.clicked.connect(self.showCoordinates)
         self.setRandomCoordinates.clicked.connect(self.randomCoordinates)
         # Combobox
-        self.chooseAlgorithm.addItem("Depth First Search")
-        self.chooseAlgorithm.addItem("Breadth First Search")
-        self.chooseAlgorithm.addItem("Dijkstra's Algorithm")
+        for algorithm in ALGORITHMS.keys():
+            self.chooseAlgorithm.addItem(algorithm)
         # Visual UI
         scene = QtWidgets.QGraphicsScene()
         self.graphicsView.setScene(scene)
@@ -107,15 +111,8 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         goalPoint = (Xgoal, Ygoal)
         grid = utils.new_grid(GRIDSIZE)
         text = self.chooseAlgorithm.currentText()
-        if text == "Depth First Search":
-            result = dfsCalculate(grid, startingPoint, goalPoint)
-        elif text == "Breadth First Search":
-            result = bfsCalculate(grid, startingPoint, goalPoint)
-        elif text == "Dijkstra's Algorithm":
-            result = djkCalculate(grid, startingPoint, goalPoint)
-        else:
-            # should never happen
-            raise NameError("Wrong algorithm name")
+
+        result = ALGORITHMS[text](grid, startingPoint, goalPoint)
 
         # enable scene to draw
         scene = QtWidgets.QGraphicsScene()
