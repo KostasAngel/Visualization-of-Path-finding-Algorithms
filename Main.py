@@ -6,6 +6,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets, uic, QtTest
 import utils
 from breadth_first_search import calculate as bfsCalculate
 from depth_first_search import calculate as dfsCalculate
+from dijkstras_algorithm import calculate as djkCalculate
 
 qtcreator_file = "mainWindow.ui"  # Enter file here.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
@@ -26,6 +27,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Combobox
         self.chooseAlgorithm.addItem("Depth First Search")
         self.chooseAlgorithm.addItem("Breadth First Search")
+        self.chooseAlgorithm.addItem("Dijkstra's Algorithm")
         # Visual UI
         scene = QtWidgets.QGraphicsScene()
         self.graphicsView.setScene(scene)
@@ -107,8 +109,13 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         text = self.chooseAlgorithm.currentText()
         if text == "Depth First Search":
             result = dfsCalculate(grid, startingPoint, goalPoint)
-        else:
+        elif text == "Breadth First Search":
             result = bfsCalculate(grid, startingPoint, goalPoint)
+        elif text == "Dijkstra's Algorithm":
+            result = djkCalculate(grid, startingPoint, goalPoint)
+        else:
+            # should never happen
+            raise NameError("Wrong algorithm name")
 
         # enable scene to draw
         scene = QtWidgets.QGraphicsScene()
