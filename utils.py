@@ -50,15 +50,12 @@ class PriorityQueue(object):
         self.entry_finder[point] = entry
         heappush(self.pq, entry)
 
-    def remove_point(self, point):
-        # For internal use in the class. "Removing" an entry from the priority queue is done simply by marking it
-        # REMOVED. Doing so relies on the fact that an entry in entry_finder is the exact same in memory as the one in
-        # the heap, so by editing it here, it is edited in the heap as well.
-        entry = self.entry_finder.pop(point)
-        entry[-1] = self.REMOVED
+    def contains_point(self, point: tuple):
+        """ Returns whether a point is still in the queue.
 
-    def has_points(self):
-        return len(self.entry_finder) != 0
+        :param point: Point to be checked if still in queue.
+        """
+        return point in self.entry_finder
 
     def get_lowest_priority_point(self):
         """ Removes and returns the point with the lowest priority in
@@ -75,6 +72,16 @@ class PriorityQueue(object):
                 del self.entry_finder[point]
                 return point
         raise KeyError("Pop from empty priority queue")
+
+    def has_points(self):
+        return len(self.entry_finder) != 0
+
+    def remove_point(self, point):
+        # For internal use in the class. "Removing" an entry from the priority queue is done simply by marking it
+        # REMOVED. Doing so relies on the fact that an entry in entry_finder is the exact same in memory as the one in
+        # the heap, so by editing it here, it is edited in the heap as well.
+        entry = self.entry_finder.pop(point)
+        entry[-1] = self.REMOVED
 
 
 def calculate_path(start, goal, child_parent_pairs):
