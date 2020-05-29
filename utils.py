@@ -1,9 +1,74 @@
 import itertools
+import random
+from collections import deque
 from heapq import heappop, heappush
 from time import sleep
 
 import numpy as np
 from asciimatics.screen import ManagedScreen
+
+
+class Grid(object):
+    def __init__(self, size=64, create_maze=False, start=(0, 0), custom_maze=None):
+        self.grid = new_grid(size)
+        self.maze_history = []
+
+        if create_maze:  # uses the DFS algorithm to create random mazes
+            self.grid[:, :] = "+"  # mark points all as walls
+
+            queue = deque([start])
+
+            child_parent_pairs = dict()
+
+            while queue:
+                current_point = queue.pop()
+                if current_point != start:
+                    parent = child_parent_pairs[current_point]
+                    in_between_point = tuple(p + (c - p) // 2 for p, c in zip(parent, current_point))
+                    self.maze_history.append(in_between_point)
+                    # mark point in between current and its parent as corridor
+                    self.grid[in_between_point] = " "
+                self.grid[current_point] = " "  # mark as corridor
+                self.maze_history.append(current_point)
+
+                neighbors = self.get_point_neighbors(current_point, d=2)
+                random.shuffle(neighbors)
+                for neighbor in neighbors:  # shuffle neighbors so next popped will be random
+                    child_parent_pairs[neighbor] = current_point
+                    queue.append(neighbor)
+
+    def get_np_grid(self):
+        return self.grid
+
+    def get_maze_history(self):
+        return self.maze_history
+
+    def get_point_neighbors(self, point, d=1):
+        """ Finds the neighboring points of the point provided.
+
+        :param point: The point whose neighbors are of interest, e.g. (0, 0).
+        :param d: Distance to neighbors required, for path-finding should always be 1 (the default). d=2 is used
+         internally to create mazes.
+        :return: List with up to 4 points adjacent to the provided point.
+        """
+
+        # possible movements, only up down left right, maybe diagonally should be an option?
+        dy, dx = [-d, 0, d, 0], [0, d, 0, -d]
+
+        neighbors = []
+        for i in range(len(dy)):
+            # possible neighbors
+            y, x = point[0] + dy[i], point[1] + dx[i]
+
+            # check if neighbors are within the grid
+            if 0 <= x < len(self.grid[0]) and 0 <= y < len(self.grid):
+                # TODO the logic here is convoluted, change it
+                if self.grid[y, x] == " " and d == 1:
+                    neighbors.append((y, x))
+                elif self.grid[y, x] == "+" and d == 2:
+                    neighbors.append((y, x))
+
+        return neighbors
 
 
 class PriorityQueue(object):
