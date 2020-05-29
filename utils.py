@@ -12,7 +12,7 @@ class Grid(object):
     def __init__(self, custom_grid=None, size=64, create_maze=False, start=(0, 0)):
         self.maze_history = []
 
-        if custom_grid:
+        if custom_grid is not None:
             self.grid = np.copy(custom_grid)  # copy provided array to prevent changes on it from elsewhere
         else:
             self.grid = new_grid(size)
@@ -41,7 +41,7 @@ class Grid(object):
                         child_parent_pairs[neighbor] = current_point
                         queue.append(neighbor)
 
-    def get_np_grid(self):
+    def to_ndarray(self):
         return self.grid
 
     def get_maze_history(self):
