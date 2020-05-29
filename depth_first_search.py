@@ -6,13 +6,21 @@ import utils
 
 
 def calculate(grid: np.ndarray, start: tuple, goal: tuple):
+    # temporary for backwards compatibility
+    if start == (0, 0) and goal == (62, 62):
+        return calculate2(start, goal, utils.Grid(create_maze=True))
+    else:
+        return calculate2(start, goal, utils.Grid(custom_grid=grid))
+
+
+def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid()):
     """ Finds path from start to goal using the Depth-First Search algorithm.
 
     Works by creating a double ended queue (deque) - by always appending to the **right** of the queue,
     and then considering the **right-most** points in the queue first, the deque essentially works as a LIFO
     queue/stack.
 
-    :param grid: A numpy array representing the grid where start and goal are located.
+    :param grid: A numpy array representing the grid where start and goal are located. # TODO change
     :param start: A tuple representing the starting point, e.g. (0, 0).
     :param goal: A tuple representing the goal point, e.g. (10, 10).
     """
@@ -34,14 +42,14 @@ def calculate(grid: np.ndarray, start: tuple, goal: tuple):
             # do not return from here, by returning below the case where no path is found is captured
             break
 
-        for neighbor in utils.get_neighbors(current_point, grid):
+        for neighbor in grid.get_point_neighbors(current_point):
             if neighbor not in visited:  # check if already visited this point
                 queue.append(neighbor)  # append to the right of the queue
                 child_parent_pairs[neighbor] = current_point
 
     path = utils.calculate_path(start, goal, child_parent_pairs)
 
-    return {"path": path, "visited": visited, "grid": grid, "start": start, "goal": goal}
+    return {"path": path, "visited": visited, "grid": grid.to_ndarray(), "start": start, "goal": goal}
 
 
 def main():
@@ -57,6 +65,10 @@ def main():
 
     # the following allows visualizing results in the terminal (thus only works when script is run from the terminal)
     utils.visualize_asciimatics(res)
+
+    # grid = utils.Grid(size=49, create_maze=True)
+    # res = calculate(grid=grid.to_ndarray(), start=(0, 0), goal=(48, 48))
+    # utils.visualize_asciimatics(res)
 
 
 if __name__ == '__main__':
