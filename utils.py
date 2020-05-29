@@ -9,33 +9,37 @@ from asciimatics.screen import ManagedScreen
 
 
 class Grid(object):
-    def __init__(self, size=64, create_maze=False, start=(0, 0), custom_maze=None):
-        self.grid = new_grid(size)
+    def __init__(self, custom_grid=None, size=64, create_maze=False, start=(0, 0)):
         self.maze_history = []
 
-        if create_maze:  # uses the DFS algorithm to create random mazes
-            self.grid[:, :] = "+"  # mark points all as walls
+        if custom_grid:
+            self.grid = np.copy(custom_grid)  # copy provided array to prevent changes on it from elsewhere
+        else:
+            self.grid = new_grid(size)
 
-            queue = deque([start])
+            if create_maze:  # uses the DFS algorithm to create random mazes
+                self.grid[:, :] = "+"  # mark points all as walls
 
-            child_parent_pairs = dict()
+                queue = deque([start])
 
-            while queue:
-                current_point = queue.pop()
-                if current_point != start:
-                    parent = child_parent_pairs[current_point]
-                    in_between_point = tuple(p + (c - p) // 2 for p, c in zip(parent, current_point))
-                    self.maze_history.append(in_between_point)
-                    # mark point in between current and its parent as corridor
-                    self.grid[in_between_point] = " "
-                self.grid[current_point] = " "  # mark as corridor
-                self.maze_history.append(current_point)
+                child_parent_pairs = dict()
 
-                neighbors = self.get_point_neighbors(current_point, d=2)
-                random.shuffle(neighbors)
-                for neighbor in neighbors:  # shuffle neighbors so next popped will be random
-                    child_parent_pairs[neighbor] = current_point
-                    queue.append(neighbor)
+                while queue:
+                    current_point = queue.pop()
+                    if current_point != start:
+                        parent = child_parent_pairs[current_point]
+                        in_between_point = tuple(p + (c - p) // 2 for p, c in zip(parent, current_point))
+                        self.maze_history.append(in_between_point)
+                        # mark point in between current and its parent as corridor
+                        self.grid[in_between_point] = " "
+                    self.grid[current_point] = " "  # mark as corridor
+                    self.maze_history.append(current_point)
+
+                    neighbors = self.get_point_neighbors(current_point, d=2)
+                    random.shuffle(neighbors)
+                    for neighbor in neighbors:  # shuffle neighbors so next popped will be random
+                        child_parent_pairs[neighbor] = current_point
+                        queue.append(neighbor)
 
     def get_np_grid(self):
         return self.grid
