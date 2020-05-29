@@ -18,7 +18,7 @@ class Grid(object):
             self.grid = new_grid(size)
 
             if create_maze:  # uses the DFS algorithm to create random mazes
-                self.grid[:, :] = "+"  # mark points all as walls
+                self.grid[:, :] = "+"  # mark all points as walls
 
                 queue = deque([start])
 
