@@ -9,11 +9,14 @@ from asciimatics.screen import ManagedScreen
 
 
 class Grid(object):
+    EMPTY, WALL = 0, 1
+
     def __init__(self, custom_grid: np.ndarray = None, size: int = 64, create_maze: bool = False,
                  start: tuple = (0, 0), random_seed: int = None):
         """ Create a grid object.
 
-        Essentially a 2D array representing the space on which path-finding will work.
+        Essentially a 2D array representing the space on which path-finding will work. Zeros represent empty spaces
+        and ones represent walls.
 
         :param custom_grid: A numpy array representing a custom grid. The array should be square, with zeros
          representing empty spaces and ones walls or other obstacles. If custom_grid is specified, all other input
@@ -22,19 +25,23 @@ class Grid(object):
         :param create_maze: If True, the generated grid object contains a random maze.
         :param start: The start point on the grid, to make sure it is located in a corridor, in the case where a
          random maze is requested.
-        :param random_seed: When provided, the generated maze produced is reproducible.
+        :param random_seed: When provided, the generated maze produced is always the same, for reproducible results.
         """
         self.maze_history = []
 
         if custom_grid is not None:
+            # create grid from provided numpy array
             self.grid = np.copy(custom_grid)  # copy provided array to prevent changes on it from elsewhere
         else:
-            if random_seed:
-                random.seed(random_seed)
-            self.grid = new_grid(size)
+            # create empty grid
+            self.grid = np.zeros(shape=(size, size), dtype=int)
 
             if create_maze:  # uses the DFS algorithm to create random mazes
-                self.grid[:, :] = "+"  # mark all points as walls
+
+                if random_seed:
+                    random.seed(random_seed)
+
+                self.grid[:, :] = Grid.WALL  # mark all points as walls
 
                 queue = deque([start])
 
@@ -72,7 +79,7 @@ class Grid(object):
         return self.maze_history
 
     def get_point_neighbors(self, point: tuple, d: int = 1):
-        """ Finds the neighboring points of the point provided.
+        """ Finds the orthogonally neighboring points of the point provided.
 
         :param point: The point whose neighbors on the grid are of interest, e.g. (0, 0).
         :param d: Distance to neighbors required, for path-finding should always be 1 (the default). d=2 is used
@@ -90,10 +97,10 @@ class Grid(object):
 
             # check if neighbors are within the grid
             if 0 <= x < len(self.grid[0]) and 0 <= y < len(self.grid):
-                # TODO the logic here is convoluted, change it
-                if self.grid[y, x] == " " and d == 1:
+                # check if neighbors are valid
+                if self.grid[y, x] == Grid.EMPTY and d == 1:  # immediate neighbors
                     neighbors.append((y, x))
-                elif self.grid[y, x] == "+" and d == 2:
+                elif self.grid[y, x] == Grid.WALL and d == 2:  # neighbors at distance = 2, used when creating mazes
                     neighbors.append((y, x))
 
         return neighbors
@@ -200,7 +207,7 @@ def calculate_path(start, goal, child_parent_pairs):
 
 def new_grid(dim: int = 64, fill: str = " "):
     """ Creates a new square grid.
-
+    TODO delete since it functionality is implemented in Grid class
     :param dim: The dimension of the side of the required square grid, defaults to 64.
     :param fill: A character representing each point in the grid, defaults to " ".
     :returns: A square ndarray with the required dimensions and fill.
