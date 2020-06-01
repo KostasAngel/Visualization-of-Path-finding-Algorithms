@@ -9,7 +9,21 @@ from asciimatics.screen import ManagedScreen
 
 
 class Grid(object):
-    def __init__(self, custom_grid=None, size=64, create_maze=False, start=(0, 0), random_seed=None):
+    def __init__(self, custom_grid: np.ndarray = None, size: int = 64, create_maze=False, start=(0, 0),
+                 random_seed: int = None):
+        """ Create a grid object.
+
+        Essentially a 2D array representing the space on which path-finding will work.
+
+        :param custom_grid: A numpy array representing a custom grid. The array should be square, with zeros
+         representing empty spaces and ones walls or other obstacles. If custom_grid is specified, all other input
+         parameters are ignored.
+        :param size: Optional number denoting the side length of a new empty square grid.
+        :param create_maze: If True, the generated grid object contains a random maze.
+        :param start: The start point on the grid, to make sure it is located in a corridor, in the case where a
+         random maze is requested.
+        :param random_seed: When provided, the generated maze produced is reproducible.
+        """
         self.maze_history = []
 
         if custom_grid is not None:
@@ -44,18 +58,26 @@ class Grid(object):
                         queue.append(neighbor)
 
     def to_ndarray(self):
+        """ Returns the grid as numpy array.
+
+        :return: A 2D ndarray representing the grid.
+        """
         return self.grid
 
     def get_maze_history(self):
+        """
+        TODO
+        :return:
+        """
         return self.maze_history
 
     def get_point_neighbors(self, point, d=1):
         """ Finds the neighboring points of the point provided.
 
-        :param point: The point whose neighbors are of interest, e.g. (0, 0).
+        :param point: The point whose neighbors on the grid are of interest, e.g. (0, 0).
         :param d: Distance to neighbors required, for path-finding should always be 1 (the default). d=2 is used
          internally to create mazes.
-        :return: List with up to 4 points adjacent to the provided point.
+        :return: List of up to 4 points adjacent to the provided point.
         """
 
         # possible movements, only up down left right, maybe diagonally should be an option?
