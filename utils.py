@@ -54,8 +54,8 @@ class Grid(object):
                         in_between_point = tuple(p + (c - p) // 2 for p, c in zip(parent, current_point))
                         self.maze_history.append(in_between_point)
                         # mark point in between current and its parent as corridor
-                        self.grid[in_between_point] = " "
-                    self.grid[current_point] = " "  # mark as corridor
+                        self.grid[in_between_point] = Grid.EMPTY
+                    self.grid[current_point] = Grid.EMPTY  # mark as corridor
                     self.maze_history.append(current_point)
 
                     neighbors = self.get_point_neighbors(current_point, d=2)
@@ -216,7 +216,13 @@ def new_grid(dim: int = 64, fill: str = " "):
 
 
 def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=True):
-    grid = np.copy(grid)
+    if type(grid) is Grid:
+        grid = np.copy(grid.to_ndarray())
+    else:
+        grid = np.copy(grid)
+
+    grid = grid.astype(str)
+
     # symbols for grid visualization
     symbols = {"border": "+",
                "space": " ",
@@ -224,6 +230,10 @@ def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=
                "path": "o",
                "start": "S",
                "goal": "G"}
+
+    # mark walls and empty spaces
+    grid[grid == f"{Grid.WALL}"] = symbols["border"]
+    grid[grid == f"{Grid.EMPTY}"] = symbols["space"]
 
     # mark the points visited
     if visited:
@@ -241,18 +251,17 @@ def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=
     if goal:
         grid[goal] = symbols["goal"]
 
-    # add visual border at beginning and end of grid
-    main_body = [symbols["space"].join([symbols["border"]] + list(row) + [symbols["border"]]) for row in grid]
+    # draw border
+    grid = np.pad(grid, 1, mode="constant", constant_values=symbols["border"])  # add border around grid
 
-    # add visual border at top and bottom of main body
-    top = bottom = symbols["space"].join([symbols["border"]] * (len(grid) + 2))
-    whole = [top] + main_body + [bottom]
+    # convert to string
+    main_body = [symbols["space"].join(row) for row in grid]
 
     if legend:
         lgd = [f"{v} -> {k}" for k, v in symbols.items()]
-        whole = whole + lgd
+        main_body = main_body + lgd
 
-    return "\n".join(whole)
+    return "\n".join(main_body)
 
 
 def visualize_asciimatics(res):
