@@ -9,12 +9,14 @@ from asciimatics.screen import ManagedScreen
 
 
 class Grid(object):
-    def __init__(self, custom_grid=None, size=64, create_maze=False, start=(0, 0)):
+    def __init__(self, custom_grid=None, size=64, create_maze=False, start=(0, 0), random_seed=None):
         self.maze_history = []
 
         if custom_grid is not None:
             self.grid = np.copy(custom_grid)  # copy provided array to prevent changes on it from elsewhere
         else:
+            if random_seed:
+                random.seed(random_seed)
             self.grid = new_grid(size)
 
             if create_maze:  # uses the DFS algorithm to create random mazes
