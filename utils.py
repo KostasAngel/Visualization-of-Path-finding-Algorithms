@@ -283,3 +283,18 @@ def visualize_asciimatics(res):
 
         screen.refresh()
         sleep(20)
+
+
+def visualize_maze_creation(grid: Grid):
+    full_grid = np.copy(grid.to_ndarray())
+    full_grid[:, :] = Grid.WALL
+    with ManagedScreen() as screen:
+        for point in grid.get_maze_history():
+            full_grid[point] = Grid.EMPTY
+            g = visualize_grid(grid=full_grid)
+
+            for j, row in enumerate(g.split("\n")):
+                screen.print_at(row, 0, j)
+            screen.refresh()
+            sleep(0.005)
+    sleep(20)
