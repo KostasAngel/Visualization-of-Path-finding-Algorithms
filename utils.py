@@ -9,8 +9,8 @@ from asciimatics.screen import ManagedScreen
 
 
 class Grid(object):
-    def __init__(self, custom_grid: np.ndarray = None, size: int = 64, create_maze=False, start=(0, 0),
-                 random_seed: int = None):
+    def __init__(self, custom_grid: np.ndarray = None, size: int = 64, create_maze: bool = False,
+                 start: tuple = (0, 0), random_seed: int = None):
         """ Create a grid object.
 
         Essentially a 2D array representing the space on which path-finding will work.
@@ -71,7 +71,7 @@ class Grid(object):
         """
         return self.maze_history
 
-    def get_point_neighbors(self, point, d=1):
+    def get_point_neighbors(self, point: tuple, d: int = 1):
         """ Finds the neighboring points of the point provided.
 
         :param point: The point whose neighbors on the grid are of interest, e.g. (0, 0).
