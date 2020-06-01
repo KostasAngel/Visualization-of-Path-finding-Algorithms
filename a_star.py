@@ -1,7 +1,6 @@
-import math
-
 import numpy as np
 
+import heuristics
 import utils
 
 
@@ -27,9 +26,9 @@ def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid(), heuri
     """
 
     if heuristic == "manhattan":
-        h_score = manhattan_distance
+        h_score = heuristics.manhattan_distance
     elif heuristic == "euclidean":
-        h_score = euclidean_distance
+        h_score = heuristics.euclidean_distance
     else:
         raise NameError("Heuristic name provided not applicable/erroneous.")
 
@@ -74,22 +73,6 @@ def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid(), heuri
     path = utils.calculate_path(start, goal, child_parent_pairs)
 
     return {"path": path, "visited": visited, "grid": grid.to_ndarray(), "start": start, "goal": goal}
-
-
-def manhattan_distance(a: tuple, b: tuple):
-    """ Calculates the Manhattan distance between two points.
-
-    Manhattan distance on Wikipedia: https://en.wikipedia.org/wiki/Taxicab_geometry
-    """
-    return sum(abs(i - j) for i, j in zip(a, b))
-
-
-def euclidean_distance(a: tuple, b: tuple):
-    """ Calculates the Euclidean distance between two points.
-
-    Euclidean distance on Wikipedia: https://en.wikipedia.org/wiki/Euclidean_distance
-    """
-    return math.sqrt(sum((i - j) ** 2 for i, j in zip(a, b)))
 
 
 def main():
