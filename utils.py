@@ -176,31 +176,6 @@ def calculate_path(start, goal, child_parent_pairs):
     return list(reversed(reverse_path))
 
 
-# Grid could be a class, and get_neighbors one of its methods
-def get_neighbors(point: tuple, grid: np.ndarray):
-    """ Finds the neighboring points of the point of interest.
-
-    :param point: The point whose neighbors are of interest, e.g. (0, 0).
-    :param grid: A numpy array representing the grid the point is situated on.
-    :returns: List with (up to 4) points next to provided point.
-    """
-
-    # possible movements, only up down left right, maybe diagonally should be an option?
-    dy, dx = [-1, 0, 1, 0], [0, 1, 0, -1]
-
-    neighbors = []
-    for i in range(len(dy)):
-        # possible neighbors
-        y, x = point[0] + dy[i], point[1] + dx[i]
-
-        # check if neighbors are within the grid
-        if 0 <= x < len(grid[0]) and 0 <= y < len(grid):
-            if grid[y, x] == " ":
-                neighbors.append((y, x))
-
-    return neighbors
-
-
 def new_grid(dim: int = 64, fill: str = " "):
     """ Creates a new square grid.
 
