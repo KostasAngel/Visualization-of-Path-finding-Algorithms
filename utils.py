@@ -38,7 +38,7 @@ class Grid(object):
 
             if create_maze:  # uses the DFS algorithm to create random mazes
 
-                if random_seed:
+                if random_seed is not None:
                     random.seed(random_seed)
 
                 self.grid[:, :] = Grid.WALL  # mark all points as walls
@@ -55,6 +55,7 @@ class Grid(object):
                         self.maze_history.append(in_between_point)
                         # mark point in between current and its parent as corridor
                         self.grid[in_between_point] = Grid.EMPTY
+
                     self.grid[current_point] = Grid.EMPTY  # mark as corridor
                     self.maze_history.append(current_point)
 
