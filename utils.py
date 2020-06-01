@@ -1,9 +1,110 @@
 import itertools
+import random
+from collections import deque
 from heapq import heappop, heappush
 from time import sleep
 
 import numpy as np
 from asciimatics.screen import ManagedScreen
+
+
+class Grid(object):
+    EMPTY, WALL = 0, 1
+
+    def __init__(self, custom_grid: np.ndarray = None, size: int = 64, create_maze: bool = False,
+                 start: tuple = (0, 0), random_seed: int = None):
+        """ Create a grid object.
+
+        Essentially a 2D array representing the space on which path-finding will work. Zeros represent empty spaces
+        and ones represent walls.
+
+        :param custom_grid: A numpy array representing a custom grid. The array should be square, with zeros
+         representing empty spaces and ones walls or other obstacles. If custom_grid is specified, all other input
+         parameters are ignored.
+        :param size: Optional number denoting the side length of a new empty square grid.
+        :param create_maze: If True, the generated grid object contains a random maze.
+        :param start: The start point on the grid, to make sure it is located in a corridor, in the case where a
+         random maze is requested.
+        :param random_seed: When provided, the generated maze produced is always the same, for reproducible results.
+        """
+        self.maze_history = []
+
+        if custom_grid is not None:
+            # create grid from provided numpy array
+            self.grid = np.copy(custom_grid)  # copy provided array to prevent changes on it from elsewhere
+        else:
+            # create empty grid
+            self.grid = np.zeros(shape=(size, size), dtype=int)
+
+            if create_maze:  # uses the DFS algorithm to create random mazes
+
+                if random_seed is not None:
+                    random.seed(random_seed)
+
+                self.grid[:, :] = Grid.WALL  # mark all points as walls
+
+                queue = deque([start])
+
+                child_parent_pairs = dict()
+
+                while queue:
+                    current_point = queue.pop()
+                    if current_point != start:
+                        parent = child_parent_pairs[current_point]
+                        in_between_point = tuple(p + (c - p) // 2 for p, c in zip(parent, current_point))
+                        self.maze_history.append(in_between_point)
+                        # mark point in between current and its parent as corridor
+                        self.grid[in_between_point] = Grid.EMPTY
+
+                    self.grid[current_point] = Grid.EMPTY  # mark as corridor
+                    self.maze_history.append(current_point)
+
+                    neighbors = self.get_point_neighbors(current_point, d=2)
+                    random.shuffle(neighbors)
+                    for neighbor in neighbors:  # shuffle neighbors so next popped will be random
+                        child_parent_pairs[neighbor] = current_point
+                        queue.append(neighbor)
+
+    def to_ndarray(self):
+        """ Returns the grid as numpy array.
+
+        :return: A 2D ndarray representing the grid.
+        """
+        return self.grid
+
+    def get_maze_history(self):
+        """
+        TODO
+        :return:
+        """
+        return self.maze_history
+
+    def get_point_neighbors(self, point: tuple, d: int = 1):
+        """ Finds the orthogonally neighboring points of the point provided.
+
+        :param point: The point whose neighbors on the grid are of interest, e.g. (0, 0).
+        :param d: Distance to neighbors required, for path-finding should always be 1 (the default). d=2 is used
+         internally to create mazes.
+        :return: List of up to 4 points adjacent to the provided point.
+        """
+
+        # possible movements, only up down left right, maybe diagonally should be an option?
+        dy, dx = [-d, 0, d, 0], [0, d, 0, -d]
+
+        neighbors = []
+        for i in range(len(dy)):
+            # possible neighbors
+            y, x = point[0] + dy[i], point[1] + dx[i]
+
+            # check if neighbors are within the grid
+            if 0 <= x < len(self.grid[0]) and 0 <= y < len(self.grid):
+                # check if neighbors are valid
+                if self.grid[y, x] == Grid.EMPTY and d == 1:  # immediate neighbors
+                    neighbors.append((y, x))
+                elif self.grid[y, x] == Grid.WALL and d == 2:  # neighbors at distance = 2, used when creating mazes
+                    neighbors.append((y, x))
+
+        return neighbors
 
 
 class PriorityQueue(object):
@@ -105,34 +206,9 @@ def calculate_path(start, goal, child_parent_pairs):
     return list(reversed(reverse_path))
 
 
-# Grid could be a class, and get_neighbors one of its methods
-def get_neighbors(point: tuple, grid: np.ndarray):
-    """ Finds the neighboring points of the point of interest.
-
-    :param point: The point whose neighbors are of interest, e.g. (0, 0).
-    :param grid: A numpy array representing the grid the point is situated on.
-    :returns: List with (up to 4) points next to provided point.
-    """
-
-    # possible movements, only up down left right, maybe diagonally should be an option?
-    dy, dx = [-1, 0, 1, 0], [0, 1, 0, -1]
-
-    neighbors = []
-    for i in range(len(dy)):
-        # possible neighbors
-        y, x = point[0] + dy[i], point[1] + dx[i]
-
-        # check if neighbors are within the grid
-        if 0 <= x < len(grid[0]) and 0 <= y < len(grid):
-            if grid[y, x] == " ":
-                neighbors.append((y, x))
-
-    return neighbors
-
-
 def new_grid(dim: int = 64, fill: str = " "):
     """ Creates a new square grid.
-
+    TODO delete since it functionality is implemented in Grid class
     :param dim: The dimension of the side of the required square grid, defaults to 64.
     :param fill: A character representing each point in the grid, defaults to " ".
     :returns: A square ndarray with the required dimensions and fill.
@@ -141,7 +217,13 @@ def new_grid(dim: int = 64, fill: str = " "):
 
 
 def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=True):
-    grid = np.copy(grid)
+    if type(grid) is Grid:
+        grid = np.copy(grid.to_ndarray())
+    else:
+        grid = np.copy(grid)
+
+    grid = grid.astype(str)
+
     # symbols for grid visualization
     symbols = {"border": "+",
                "space": " ",
@@ -149,6 +231,10 @@ def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=
                "path": "o",
                "start": "S",
                "goal": "G"}
+
+    # mark walls and empty spaces
+    grid[grid == f"{Grid.WALL}"] = symbols["border"]
+    grid[grid == f"{Grid.EMPTY}"] = symbols["space"]
 
     # mark the points visited
     if visited:
@@ -166,18 +252,17 @@ def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=
     if goal:
         grid[goal] = symbols["goal"]
 
-    # add visual border at beginning and end of grid
-    main_body = [symbols["space"].join([symbols["border"]] + list(row) + [symbols["border"]]) for row in grid]
+    # draw border
+    grid = np.pad(grid, 1, mode="constant", constant_values=symbols["border"])  # add border around grid
 
-    # add visual border at top and bottom of main body
-    top = bottom = symbols["space"].join([symbols["border"]] * (len(grid) + 2))
-    whole = [top] + main_body + [bottom]
+    # convert to string
+    main_body = [symbols["space"].join(row) for row in grid]
 
     if legend:
         lgd = [f"{v} -> {k}" for k, v in symbols.items()]
-        whole = whole + lgd
+        main_body = main_body + lgd
 
-    return "\n".join(whole)
+    return "\n".join(main_body)
 
 
 def visualize_asciimatics(res):
@@ -198,3 +283,18 @@ def visualize_asciimatics(res):
 
         screen.refresh()
         sleep(20)
+
+
+def visualize_maze_creation(grid: Grid):
+    full_grid = np.copy(grid.to_ndarray())
+    full_grid[:, :] = Grid.WALL
+    with ManagedScreen() as screen:
+        for point in grid.get_maze_history():
+            full_grid[point] = Grid.EMPTY
+            g = visualize_grid(grid=full_grid)
+
+            for j, row in enumerate(g.split("\n")):
+                screen.print_at(row, 0, j)
+            screen.refresh()
+            sleep(0.005)
+    sleep(20)
