@@ -6,10 +6,8 @@ import utils
 
 def calculate(grid: np.ndarray, start: tuple, goal: tuple, heuristic: str = "manhattan"):
     # temporary for backwards compatibility
-    if start == (0, 0) and goal == (62, 62):
-        return calculate2(start, goal, utils.Grid(create_maze=True), heuristic)
-    else:
-        return calculate2(start, goal, utils.Grid(custom_grid=grid), heuristic)
+    # here I'm replacing the grids from the old method to make sure the revised algorithms work as expected
+    return calculate2(start, goal, utils.Grid(), heuristic)
 
 
 def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid(), heuristic: str = "manhattan"):
@@ -18,9 +16,9 @@ def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid(), heuri
     Implementation of this algorithm was based on the example provided in Wikipedia:
     https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode
 
-    :param grid: A numpy array representing the grid where start and goal are located.
     :param start: A tuple representing the starting point, e.g. (0, 0).
     :param goal: A tuple representing the goal point, e.g. (10, 10).
+    :param grid: A Grid object representing the space where start and goal are located, optional.
     :param heuristic: The heuristic the algorithm will use, defaults to the Manhattan distance. Currently options
      "manhattan" and "euclidean" are supported.
     """
@@ -77,14 +75,9 @@ def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid(), heuri
 
 def main():
     # the code here is just for testing, the program can just call calculate() above and skip this
-    grid = utils.new_grid(20)
+    grid = utils.Grid(size=19, create_maze=True)
 
-    grid[:17, 4] = "+"
-    grid[1, 1:9] = "+"
-    grid[10, 6:18] = "+"
-    grid[10:, 7] = "+"
-
-    res = calculate(grid=grid, start=(0, 0), goal=(17, 17), heuristic="manhattan")
+    res = calculate2(grid=grid, start=(0, 0), goal=(18, 18), heuristic="manhattan")
 
     # the following allows visualizing results in the terminal (thus only works when script is run from the terminal)
     utils.visualize_asciimatics(res)

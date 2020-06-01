@@ -7,10 +7,8 @@ import utils
 
 def calculate(grid: np.ndarray, start: tuple, goal: tuple):
     # temporary for backwards compatibility
-    if start == (0, 0) and goal == (62, 62):
-        return calculate2(start, goal, utils.Grid(create_maze=True))
-    else:
-        return calculate2(start, goal, utils.Grid(custom_grid=grid))
+    # here I'm replacing the grids from the old method to make sure the revised algorithms work as expected
+    return calculate2(start, goal, utils.Grid())
 
 
 def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid()):
@@ -19,9 +17,9 @@ def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid()):
     Implementation of this algorithm was based on the example provided in Wikipedia:
     https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm#Pseudocode
 
-    :param grid: A numpy array representing the grid where start and goal are located.
     :param start: A tuple representing the starting point, e.g. (0, 0).
     :param goal: A tuple representing the goal point, e.g. (10, 10).
+    :param grid: A Grid object representing the space where start and goal are located, optional.
     """
 
     pq = utils.PriorityQueue()
@@ -65,14 +63,9 @@ def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid()):
 
 def main():
     # the code here is just for testing, the program can just call calculate() above and skip this
-    grid = utils.new_grid(20)
+    grid = utils.Grid(size=19, create_maze=True)
 
-    grid[:17, 4] = "+"
-    grid[1, 1:9] = "+"
-    grid[10, 6:18] = "+"
-    grid[10:, 7] = "+"
-
-    res = calculate(grid=grid, start=(0, 0), goal=(17, 17))
+    res = calculate2(grid=grid, start=(0, 0), goal=(18, 18))
 
     # the following allows visualizing results in the terminal (thus only works when script is run from the terminal)
     utils.visualize_asciimatics(res)
