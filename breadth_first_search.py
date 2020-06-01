@@ -6,6 +6,14 @@ import utils
 
 
 def calculate(grid: np.ndarray, start: tuple, goal: tuple):
+    # temporary for backwards compatibility
+    if start == (0, 0) and goal == (62, 62):
+        return calculate2(start, goal, utils.Grid(create_maze=True))
+    else:
+        return calculate2(start, goal, utils.Grid(custom_grid=grid))
+
+
+def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid()):
     """ Finds path from start to goal using the Breadth-First Search algorithm.
 
     Works by creating a double ended queue (deque) - by always appending to the **right** of the queue,
@@ -33,14 +41,14 @@ def calculate(grid: np.ndarray, start: tuple, goal: tuple):
             # do not return from here, by returning below the case where no path is found is captured
             break
 
-        for neighbor in utils.get_neighbors(current_point, grid):
+        for neighbor in grid.get_point_neighbors(current_point):
             if neighbor not in visited and neighbor not in queue:  # check if already visited this point
                 queue.appendleft(neighbor)  # append to the left of the queue
                 child_parent_pairs[neighbor] = current_point
 
     path = utils.calculate_path(start, goal, child_parent_pairs)
 
-    return {"path": path, "visited": visited, "grid": grid, "start": start, "goal": goal}
+    return {"path": path, "visited": visited, "grid": grid.to_ndarray(), "start": start, "goal": goal}
 
 
 def main():

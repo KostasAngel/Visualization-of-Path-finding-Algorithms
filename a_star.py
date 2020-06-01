@@ -6,6 +6,14 @@ import utils
 
 
 def calculate(grid: np.ndarray, start: tuple, goal: tuple, heuristic: str = "manhattan"):
+    # temporary for backwards compatibility
+    if start == (0, 0) and goal == (62, 62):
+        return calculate2(start, goal, utils.Grid(create_maze=True), heuristic)
+    else:
+        return calculate2(start, goal, utils.Grid(custom_grid=grid), heuristic)
+
+
+def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid(), heuristic: str = "manhattan"):
     """ Finds path from start to goal using the A* algorithm.
 
     Implementation of this algorithm was based on the example provided in Wikipedia:
@@ -51,7 +59,7 @@ def calculate(grid: np.ndarray, start: tuple, goal: tuple, heuristic: str = "man
             # do not return from here, by returning below the case where no path is found is captured
             break
 
-        for neighbor in utils.get_neighbors(current_point, grid):
+        for neighbor in grid.get_point_neighbors(current_point):
             tentative_g_score = g_scores[current_point] + 1  # neighbors always 1 step away from current
             if neighbor in g_scores and g_scores[neighbor] < tentative_g_score:
                 # neighbor already reached from another point that resulted in a lower g_score, so skip it
@@ -65,7 +73,7 @@ def calculate(grid: np.ndarray, start: tuple, goal: tuple, heuristic: str = "man
 
     path = utils.calculate_path(start, goal, child_parent_pairs)
 
-    return {"path": path, "visited": visited, "grid": grid, "start": start, "goal": goal}
+    return {"path": path, "visited": visited, "grid": grid.to_ndarray(), "start": start, "goal": goal}
 
 
 def manhattan_distance(a: tuple, b: tuple):

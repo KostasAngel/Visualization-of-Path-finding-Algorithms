@@ -6,6 +6,14 @@ import utils
 
 
 def calculate(grid: np.ndarray, start: tuple, goal: tuple):
+    # temporary for backwards compatibility
+    if start == (0, 0) and goal == (62, 62):
+        return calculate2(start, goal, utils.Grid(create_maze=True))
+    else:
+        return calculate2(start, goal, utils.Grid(custom_grid=grid))
+
+
+def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid()):
     """ Finds path from start to goal using Dijkstra's algorithm.
 
     Implementation of this algorithm was based on the example provided in Wikipedia:
@@ -22,7 +30,7 @@ def calculate(grid: np.ndarray, start: tuple, goal: tuple):
     visited = []
 
     # add all points in grid to priority queue with infinite distances and no parents
-    for y, x in np.ndindex(grid.shape):
+    for y, x in np.ndindex(grid.to_ndarray().shape):
         distances[(y, x)] = math.inf
         child_parent_pairs[(y, x)] = ""
         pq.add_point((y, x), math.inf)
@@ -40,7 +48,7 @@ def calculate(grid: np.ndarray, start: tuple, goal: tuple):
             # goal has been reached
             break
 
-        for neighbor in utils.get_neighbors(current_point, grid):
+        for neighbor in grid.get_point_neighbors(current_point):
             if pq.contains_point(neighbor):
 
                 alt_distance = distances[current_point] + 1  # neighbors always 1 step away from current
@@ -52,7 +60,7 @@ def calculate(grid: np.ndarray, start: tuple, goal: tuple):
 
     path = utils.calculate_path(start, goal, child_parent_pairs)
 
-    return {"path": path, "visited": visited, "grid": grid, "start": start, "goal": goal}
+    return {"path": path, "visited": visited, "grid": grid.to_ndarray(), "start": start, "goal": goal}
 
 
 def main():
