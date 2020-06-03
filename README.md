@@ -1,3 +1,13 @@
 # Visualization of Path Finding Algorithms
 
-## Breadth-First Search
+## Uninformed search strategies
+
+### Breadth-First Search
+
+### Depth-First Search
+
+### Dijkstra's algorithm
+
+## Informed (heuristic) search strategies
+
+### A* Search
