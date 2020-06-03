@@ -6,7 +6,9 @@
 
 ### Depth-First Search
 
-### Dijkstra's algorithm
+### Dijkstra's Algorithm
+
+### Bidirectional Search
 
 ## Informed (heuristic) search strategies
 
