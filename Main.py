@@ -30,9 +30,11 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
         # Buttons
+
         self.runPathFinding.clicked.connect(self.runAlgorithm)
         self.setCoordinates.clicked.connect(self.showCoordinates)
         self.setRandomCoordinates.clicked.connect(self.randomCoordinates)
+        self.runPathFinding.setEnabled(False)
         # Combobox
         for algorithm in ALGORITHMS.keys():
             self.chooseAlgorithm.addItem(algorithm)
@@ -51,6 +53,8 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 scene.addRect(r, penGrid)
 
     def showCoordinates(self):
+        # Check if there are values to the boxes.
+
         # inputs to values
         Xstart = int(self.startXValue.toPlainText())
         Ystart = int(self.startYValue.toPlainText())
@@ -76,6 +80,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                       10, 10, penPoint, pointBrushStart)
         scene.addRect(int(Xgoal * side), int(Ygoal * side),
                       10, 10, penPoint, pointBrushEnd)
+        self.runPathFinding.setEnabled(True)
 
     def randomCoordinates(self):
         # Chose Random value
@@ -108,6 +113,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                       10, 10, penPoint, pointBrushStart)
         scene.addRect(int(Xgoal * side), int(Ygoal * side),
                       10, 10, penPoint, pointBrushEnd)
+        self.runPathFinding.setEnabled(True)
 
     def runAlgorithm(self):
         # inputs to values
@@ -120,15 +126,13 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         goalPoint = (Xgoal, Ygoal)
         grid = utils.new_grid(GRIDSIZE)
         text = self.chooseAlgorithm.currentText()
-
         result = ALGORITHMS[text](grid, startingPoint, goalPoint)
-
         # enable scene to draw
         scene = QtWidgets.QGraphicsScene()
         self.graphicsView.setScene(scene)
         penGrid = QtGui.QPen(QtCore.Qt.black)
         penVisited = QtGui.QPen(QtCore.Qt.darkRed)
-        penPoint = QtGui.QPen(QtCore.Qt.white)
+        penPoint = QtGui.QPen(QtCore.Qt.red)
         pointBrushvisited = QtGui.QBrush(QtCore.Qt.white)
         pointBrushEnd = QtGui.QBrush(QtCore.Qt.green)
         pointBrushStart = QtGui.QBrush(QtCore.Qt.blue)
