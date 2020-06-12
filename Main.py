@@ -41,14 +41,13 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.graphicsView.setScene(scene)
         # colors
         penGrid = QtGui.QPen(QtCore.Qt.black)
-        penPoint = QtGui.QPen(QtCore.Qt.red)
-        pointBrushEnd = QtGui.QBrush(QtCore.Qt.green)
-        pointBrushStart = QtGui.QBrush(QtCore.Qt.blue)
+
         # Draw Grid
         side = 10
         for i in range(GRIDSIZE):
             for j in range(GRIDSIZE):
-                r = QtCore.QRectF(QtCore.QPointF(i * side, j * side), QtCore.QSizeF(side, side))
+                r = QtCore.QRectF(QtCore.QPointF(
+                    i * side, j * side), QtCore.QSizeF(side, side))
                 scene.addRect(r, penGrid)
 
     def showCoordinates(self):
@@ -69,11 +68,14 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         side = 10
         for i in range(GRIDSIZE):
             for j in range(GRIDSIZE):
-                r = QtCore.QRectF(QtCore.QPointF(i * side, j * side), QtCore.QSizeF(side, side))
+                r = QtCore.QRectF(QtCore.QPointF(
+                    i * side, j * side), QtCore.QSizeF(side, side))
                 scene.addRect(r, penGrid)
         # Draw Start and End node
-        scene.addRect(int(Xstart * side), int(Ystart * side), 10, 10, penPoint, pointBrushStart)
-        scene.addRect(int(Xgoal * side), int(Ygoal * side), 10, 10, penPoint, pointBrushEnd)
+        scene.addRect(int(Xstart * side), int(Ystart * side),
+                      10, 10, penPoint, pointBrushStart)
+        scene.addRect(int(Xgoal * side), int(Ygoal * side),
+                      10, 10, penPoint, pointBrushEnd)
 
     def randomCoordinates(self):
         # Chose Random value
@@ -98,11 +100,14 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         side = 10
         for i in range(GRIDSIZE):
             for j in range(GRIDSIZE):
-                r = QtCore.QRectF(QtCore.QPointF(i * side, j * side), QtCore.QSizeF(side, side))
+                r = QtCore.QRectF(QtCore.QPointF(
+                    i * side, j * side), QtCore.QSizeF(side, side))
                 scene.addRect(r, penGrid)
         # Draw Start and End node
-        scene.addRect(int(Xstart * side), int(Ystart * side), 10, 10, penPoint, pointBrushStart)
-        scene.addRect(int(Xgoal * side), int(Ygoal * side), 10, 10, penPoint, pointBrushEnd)
+        scene.addRect(int(Xstart * side), int(Ystart * side),
+                      10, 10, penPoint, pointBrushStart)
+        scene.addRect(int(Xgoal * side), int(Ygoal * side),
+                      10, 10, penPoint, pointBrushEnd)
 
     def runAlgorithm(self):
         # inputs to values
@@ -131,25 +136,32 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         side = 10
         for i in range(GRIDSIZE):
             for j in range(GRIDSIZE):
-                r = QtCore.QRectF(QtCore.QPointF(i * side, j * side), QtCore.QSizeF(side, side))
+                r = QtCore.QRectF(QtCore.QPointF(
+                    i * side, j * side), QtCore.QSizeF(side, side))
                 scene.addRect(r, penGrid)
                 # draw path
         pointBrushPath = QtGui.QBrush(QtCore.Qt.black)
         correctPath = result.get("path")
         visited = result.get("visited")
         # print (visited)
-        scene.addRect(int(Xstart * side), int(Ystart * side), 10, 10, penPoint, pointBrushStart)
-        scene.addRect(int(Xgoal * side), int(Ygoal * side), 10, 10, penPoint, pointBrushEnd)
+        scene.addRect(int(Xstart * side), int(Ystart * side),
+                      10, 10, penPoint, pointBrushStart)
+        scene.addRect(int(Xgoal * side), int(Ygoal * side),
+                      10, 10, penPoint, pointBrushEnd)
         for x, y in visited:
             QtTest.QTest.qWait(5)
-            scene.addRect(x * side, y * side, 10, 10, penVisited, pointBrushvisited)
-            scene.addRect(int(Xstart * side), int(Ystart * side), 10, 10, penPoint, pointBrushStart)
+            scene.addRect(x * side, y * side, 10, 10,
+                          penVisited, pointBrushvisited)
+            scene.addRect(int(Xstart * side), int(Ystart * side),
+                          10, 10, penPoint, pointBrushStart)
         # print (correctPath)
         for x, y in correctPath:
             scene.addRect(x * side, y * side, 10, 10, penPoint, pointBrushPath)
         # Draw end and start nodes
-        scene.addRect(int(Xstart * side), int(Ystart * side), 10, 10, penPoint, pointBrushStart)
-        scene.addRect(int(Xgoal * side), int(Ygoal * side), 10, 10, penPoint, pointBrushEnd)
+        scene.addRect(int(Xstart * side), int(Ystart * side),
+                      10, 10, penPoint, pointBrushStart)
+        scene.addRect(int(Xgoal * side), int(Ygoal * side),
+                      10, 10, penPoint, pointBrushEnd)
 
 
 if __name__ == "__main__":
