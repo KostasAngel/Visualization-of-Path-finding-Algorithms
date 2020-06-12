@@ -54,7 +54,6 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def showCoordinates(self):
         # Check if there are values to the boxes.
-
         # inputs to values
         Xstart = int(self.startXValue.toPlainText())
         Ystart = int(self.startYValue.toPlainText())
@@ -116,6 +115,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.runPathFinding.setEnabled(True)
 
     def runAlgorithm(self):
+        self.runPathFinding.setEnabled(False)
         # inputs to values
         Xstart = int(self.startXValue.toPlainText())
         Ystart = int(self.startYValue.toPlainText())
