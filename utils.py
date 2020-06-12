@@ -31,7 +31,8 @@ class Grid(object):
 
         if custom_grid is not None:
             # create grid from provided numpy array
-            self.grid = np.copy(custom_grid)  # copy provided array to prevent changes on it from elsewhere
+            # copy provided array to prevent changes on it from elsewhere
+            self.grid = np.copy(custom_grid)
         else:
             # create empty grid
             self.grid = np.zeros(shape=(size, size), dtype=int)
@@ -51,7 +52,8 @@ class Grid(object):
                     current_point = queue.pop()
                     if current_point != start:
                         parent = child_parent_pairs[current_point]
-                        in_between_point = tuple(p + (c - p) // 2 for p, c in zip(parent, current_point))
+                        in_between_point = tuple(
+                            p + (c - p) // 2 for p, c in zip(parent, current_point))
                         self.maze_history.append(in_between_point)
                         # mark point in between current and its parent as corridor
                         self.grid[in_between_point] = Grid.EMPTY
@@ -101,7 +103,8 @@ class Grid(object):
                 # check if neighbors are valid
                 if self.grid[y, x] == Grid.EMPTY and d == 1:  # immediate neighbors
                     neighbors.append((y, x))
-                elif self.grid[y, x] == Grid.WALL and d == 2:  # neighbors at distance = 2, used when creating mazes
+                # neighbors at distance = 2, used when creating mazes
+                elif self.grid[y, x] == Grid.WALL and d == 2:
                     neighbors.append((y, x))
 
         return neighbors
@@ -196,7 +199,8 @@ def calculate_path(start, goal, child_parent_pairs):
 
     # TODO is there a better way to check this?
     if goal not in child_parent_pairs.keys():
-        raise AssertionError("No route to goal (goal not in child_parent_pairs)")
+        raise AssertionError(
+            "No route to goal (goal not in child_parent_pairs)")
 
     reverse_path = [goal]
 
@@ -253,7 +257,8 @@ def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=
         grid[goal] = symbols["goal"]
 
     # draw border
-    grid = np.pad(grid, 1, mode="constant", constant_values=symbols["border"])  # add border around grid
+    # add border around grid
+    grid = np.pad(grid, 1, mode="constant", constant_values=symbols["border"])
 
     # convert to string
     main_body = [symbols["space"].join(row) for row in grid]
@@ -269,7 +274,8 @@ def visualize_asciimatics(res):
     with ManagedScreen() as screen:
         # print visited one by one
         for i in range(1, len(res["visited"])):
-            grid = visualize_grid(res["grid"], visited=res["visited"][:i + 1], start=res["start"], goal=res["goal"])
+            grid = visualize_grid(
+                res["grid"], visited=res["visited"][:i + 1], start=res["start"], goal=res["goal"])
 
             for j, row in enumerate(grid.split("\n")):
                 screen.print_at(row, 0, j)

@@ -49,11 +49,13 @@ def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid()):
         for neighbor in grid.get_point_neighbors(current_point):
             if pq.contains_point(neighbor):
 
-                alt_distance = distances[current_point] + 1  # neighbors always 1 step away from current
+                # neighbors always 1 step away from current
+                alt_distance = distances[current_point] + 1
 
                 if alt_distance < distances[neighbor]:
                     distances[neighbor] = alt_distance
-                    pq.add_point(neighbor, alt_distance)  # update neighbor's priority with new distance
+                    # update neighbor's priority with new distance
+                    pq.add_point(neighbor, alt_distance)
                     child_parent_pairs[neighbor] = current_point
 
     path = utils.calculate_path(start, goal, child_parent_pairs)
