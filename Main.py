@@ -11,9 +11,8 @@ from dijkstras_algorithm import calculate as djkCalculate
 
 qtcreator_file = "mainWindow.ui"  # Enter file here.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
-
 GRIDSIZE = 64
-
+SIDE = 10
 # dictionary with implemented algorithms, when adding a new one we can update the dict only once
 ALGORITHMS = {"Breadth First Search": bfsCalculate,
               "Depth First Search": dfsCalculate,
@@ -21,6 +20,15 @@ ALGORITHMS = {"Breadth First Search": bfsCalculate,
               "A* (Manhattan distance)": aStarCalculate,
               "A* (Euclidean distance)": lambda grid, start, goal: aStarCalculate(grid, start, goal,
                                                                                   heuristic="euclidean")}
+app = QtWidgets.QApplication(sys.argv)
+scene = QtWidgets.QGraphicsScene()
+penPoint = QtGui.QPen(QtCore.Qt.red)
+pointBrushEnd = QtGui.QBrush(QtCore.Qt.green)
+pointBrushStart = QtGui.QBrush(QtCore.Qt.blue)
+penGrid = QtGui.QPen(QtCore.Qt.black)
+penVisited = QtGui.QPen(QtCore.Qt.darkRed)
+pointBrushvisited = QtGui.QBrush(QtCore.Qt.white)
+pointBrushPath = QtGui.QBrush(QtCore.Qt.black)
 
 
 class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -30,55 +38,40 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
         # Buttons
-
         self.runPathFinding.clicked.connect(self.runAlgorithm)
         self.setCoordinates.clicked.connect(self.showCoordinates)
         self.setRandomCoordinates.clicked.connect(self.randomCoordinates)
+        self.generateMaze.clicked.connect(self.generateMazes)
         self.runPathFinding.setEnabled(False)
+        self.startXValue.setPlainText("0")
+        self.startYValue.setPlainText("0")
+        self.goalXValue.setPlainText("63")
+        self.goalYValue.setPlainText("63")
         # Combobox
         for algorithm in ALGORITHMS.keys():
             self.chooseAlgorithm.addItem(algorithm)
-        # Visual UI
-        scene = QtWidgets.QGraphicsScene()
-        self.graphicsView.setScene(scene)
-        # colors
-        penGrid = QtGui.QPen(QtCore.Qt.black)
-
-        # Draw Grid
-        side = 10
-        for i in range(GRIDSIZE):
-            for j in range(GRIDSIZE):
-                r = QtCore.QRectF(QtCore.QPointF(
-                    i * side, j * side), QtCore.QSizeF(side, side))
-                scene.addRect(r, penGrid)
+        # GridDraw
+        self.drawGrid(scene, penGrid, SIDE)
 
     def showCoordinates(self):
         # Check if there are values to the boxes.
         # inputs to values
+        if not(int(self.startXValue.toPlainText()) >= 0 and int(self.startXValue.toPlainText()) < 64):
+            self.startXValue.setPlainText("0")
+        if not(int(self.startYValue.toPlainText()) >= 0 and int(self.startYValue.toPlainText()) < 64):
+            self.startYValue.setPlainText("0")
+        if not(int(self.goalXValue.toPlainText()) >= 0 and int(self.goalXValue.toPlainText()) < 64):
+            self.goalXValue.setPlainText("63")
+        if not(int(self.goalYValue.toPlainText()) >= 0 and int(self.goalYValue.toPlainText()) < 64):
+            self.goalYValue.setPlainText("63")
         Xstart = int(self.startXValue.toPlainText())
         Ystart = int(self.startYValue.toPlainText())
         Xgoal = int(self.goalXValue.toPlainText())
         Ygoal = int(self.goalYValue.toPlainText())
-        # enable scene to draw
-        scene = QtWidgets.QGraphicsScene()
-        self.graphicsView.setScene(scene)
-        # colors
-        penGrid = QtGui.QPen(QtCore.Qt.black)
-        penPoint = QtGui.QPen(QtCore.Qt.red)
-        pointBrushEnd = QtGui.QBrush(QtCore.Qt.green)
-        pointBrushStart = QtGui.QBrush(QtCore.Qt.blue)
-        # Grid
-        side = 10
-        for i in range(GRIDSIZE):
-            for j in range(GRIDSIZE):
-                r = QtCore.QRectF(QtCore.QPointF(
-                    i * side, j * side), QtCore.QSizeF(side, side))
-                scene.addRect(r, penGrid)
-        # Draw Start and End node
-        scene.addRect(int(Xstart * side), int(Ystart * side),
-                      10, 10, penPoint, pointBrushStart)
-        scene.addRect(int(Xgoal * side), int(Ygoal * side),
-                      10, 10, penPoint, pointBrushEnd)
+        # GridDraw
+        window.drawGrid(scene, penGrid, SIDE)
+        window.drawStartEndNodes(Xstart, Ystart, Xgoal, Ygoal,
+                                 penPoint, pointBrushStart, pointBrushEnd)
         self.runPathFinding.setEnabled(True)
 
     def randomCoordinates(self):
@@ -92,30 +85,16 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.startYValue.setPlainText(str(Ystart))
         self.goalXValue.setPlainText(str(Xgoal))
         self.goalYValue.setPlainText(str(Ygoal))
-        # enable scene to draw
-        scene = QtWidgets.QGraphicsScene()
-        self.graphicsView.setScene(scene)
-        # colors
-        penGrid = QtGui.QPen(QtCore.Qt.black)
-        penPoint = QtGui.QPen(QtCore.Qt.red)
-        pointBrushEnd = QtGui.QBrush(QtCore.Qt.green)
-        pointBrushStart = QtGui.QBrush(QtCore.Qt.blue)
-        # Grid
-        side = 10
-        for i in range(GRIDSIZE):
-            for j in range(GRIDSIZE):
-                r = QtCore.QRectF(QtCore.QPointF(
-                    i * side, j * side), QtCore.QSizeF(side, side))
-                scene.addRect(r, penGrid)
-        # Draw Start and End node
-        scene.addRect(int(Xstart * side), int(Ystart * side),
-                      10, 10, penPoint, pointBrushStart)
-        scene.addRect(int(Xgoal * side), int(Ygoal * side),
-                      10, 10, penPoint, pointBrushEnd)
+        # Draw
+        window.drawGrid(scene, penGrid, SIDE)
+        window.drawStartEndNodes(Xstart, Ystart, Xgoal, Ygoal,
+                                 penPoint, pointBrushStart, pointBrushEnd)
         self.runPathFinding.setEnabled(True)
 
     def runAlgorithm(self):
         self.runPathFinding.setEnabled(False)
+        window.setCoordinates.setEnabled(False)
+        window.setRandomCoordinates.setEnabled(False)
         # inputs to values
         Xstart = int(self.startXValue.toPlainText())
         Ystart = int(self.startYValue.toPlainText())
@@ -128,48 +107,60 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         text = self.chooseAlgorithm.currentText()
         result = ALGORITHMS[text](grid, startingPoint, goalPoint)
         # enable scene to draw
-        scene = QtWidgets.QGraphicsScene()
-        self.graphicsView.setScene(scene)
-        penGrid = QtGui.QPen(QtCore.Qt.black)
-        penVisited = QtGui.QPen(QtCore.Qt.darkRed)
-        penPoint = QtGui.QPen(QtCore.Qt.red)
-        pointBrushvisited = QtGui.QBrush(QtCore.Qt.white)
-        pointBrushEnd = QtGui.QBrush(QtCore.Qt.green)
-        pointBrushStart = QtGui.QBrush(QtCore.Qt.blue)
+        window.drawGrid(scene, penGrid, SIDE)
         # Draw grid
-        side = 10
+        window.drawStartEndNodes(Xstart, Ystart, Xgoal, Ygoal,
+                                 penPoint, pointBrushStart, pointBrushEnd)
+        # Get paths
+        correctPath = result.get("path")
+        visited = result.get("visited")
+        # GridDrawVisited
+        window.drawVisited(Xstart, Ystart, Xgoal, Ygoal,
+                           penPoint, pointBrushStart, pointBrushEnd, penVisited, pointBrushvisited, visited, correctPath, SIDE)
+        self.runPathFinding.setEnabled(True)
+        window.setCoordinates.setEnabled(True)
+        window.setRandomCoordinates.setEnabled(True)
+
+    def drawGrid(self, scene, penGrid, SIDE):
+        self.graphicsView.setScene(scene)
         for i in range(GRIDSIZE):
             for j in range(GRIDSIZE):
                 r = QtCore.QRectF(QtCore.QPointF(
-                    i * side, j * side), QtCore.QSizeF(side, side))
+                    i * SIDE, j * SIDE), QtCore.QSizeF(SIDE, SIDE))
                 scene.addRect(r, penGrid)
-                # draw path
-        pointBrushPath = QtGui.QBrush(QtCore.Qt.black)
-        correctPath = result.get("path")
-        visited = result.get("visited")
-        # print (visited)
-        scene.addRect(int(Xstart * side), int(Ystart * side),
+
+    def drawStartEndNodes(self, Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd):
+        scene.clear()
+        window.drawGrid(scene, penGrid, SIDE)
+        scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE),
                       10, 10, penPoint, pointBrushStart)
-        scene.addRect(int(Xgoal * side), int(Ygoal * side),
+        scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE),
+                      10, 10, penPoint, pointBrushEnd)
+
+    def drawVisited(self, Xstart, Ystart, Xgoal, Ygoal,
+                    penPoint, pointBrushStart, pointBrushEnd, penVisited, pointBrushvisited, visited, correctPath, SIDE):
+        scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE),
+                      10, 10, penPoint, pointBrushStart)
+        scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE),
                       10, 10, penPoint, pointBrushEnd)
         for x, y in visited:
             QtTest.QTest.qWait(5)
-            scene.addRect(x * side, y * side, 10, 10,
+            scene.addRect(x * SIDE, y * SIDE, 10, 10,
                           penVisited, pointBrushvisited)
-            scene.addRect(int(Xstart * side), int(Ystart * side),
+            scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE),
                           10, 10, penPoint, pointBrushStart)
-        # print (correctPath)
         for x, y in correctPath:
-            scene.addRect(x * side, y * side, 10, 10, penPoint, pointBrushPath)
-        # Draw end and start nodes
-        scene.addRect(int(Xstart * side), int(Ystart * side),
+            scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, pointBrushPath)
+        scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE),
                       10, 10, penPoint, pointBrushStart)
-        scene.addRect(int(Xgoal * side), int(Ygoal * side),
+        scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE),
                       10, 10, penPoint, pointBrushEnd)
 
+    # def generateMazes(self)
 
+    # TO DO This function
 if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
+
     window = MyWindow()
     window.show()
     sys.exit(app.exec_())
