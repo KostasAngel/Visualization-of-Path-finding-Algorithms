@@ -9,7 +9,7 @@ from path_finding_algorithms.breadth_first_search import calculate as bfsCalcula
 from path_finding_algorithms.depth_first_search import calculate as dfsCalculate
 from path_finding_algorithms.dijkstras_algorithm import calculate as djkCalculate
 
-qtcreator_file = "mainWindow.ui"  # Enter file here.
+qtcreator_file = "main_window.ui"  # Enter file here.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
 GRIDSIZE = 64
 SIDE = 10
