@@ -1,7 +1,7 @@
 import numpy as np
 
-import heuristics
-import utils
+import path_finding_algorithms.heuristics as heuristics
+import path_finding_algorithms.utils as utils
 
 
 def calculate(grid: np.ndarray, start: tuple, goal: tuple, heuristic: str = "manhattan"):

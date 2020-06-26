@@ -3,11 +3,11 @@ import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets, uic, QtTest
 
-import utils
-from a_star import calculate as aStarCalculate
-from breadth_first_search import calculate as bfsCalculate
-from depth_first_search import calculate as dfsCalculate
-from dijkstras_algorithm import calculate as djkCalculate
+import path_finding_algorithms.utils as utils
+from path_finding_algorithms.a_star import calculate as aStarCalculate
+from path_finding_algorithms.breadth_first_search import calculate as bfsCalculate
+from path_finding_algorithms.depth_first_search import calculate as dfsCalculate
+from path_finding_algorithms.dijkstras_algorithm import calculate as djkCalculate
 
 qtcreator_file = "mainWindow.ui"  # Enter file here.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
@@ -41,7 +41,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.runPathFinding.clicked.connect(self.runAlgorithm)
         self.setCoordinates.clicked.connect(self.showCoordinates)
         self.setRandomCoordinates.clicked.connect(self.randomCoordinates)
-        self.generateMaze.clicked.connect(self.generateMazes)
+        # self.generateMaze.clicked.connect(self.generateMazes)
         self.runPathFinding.setEnabled(False)
         self.startXValue.setPlainText("0")
         self.startYValue.setPlainText("0")
@@ -160,7 +160,6 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     # TO DO This function
 if __name__ == "__main__":
-
     window = MyWindow()
     window.show()
     sys.exit(app.exec_())
