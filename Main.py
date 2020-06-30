@@ -132,6 +132,15 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 r = QtCore.QRectF(QtCore.QPointF(
                     i * SIDE, j * SIDE), QtCore.QSizeF(SIDE, SIDE))
                 scene.addRect(r, penGrid)
+        for y in range(GRIDSIZE):
+            for x in range(GRIDSIZE):
+                if grid.to_ndarray()[y, x] == grid.WALL:
+                    # print wall
+                    scene.addRect(x * SIDE, y * SIDE, 10, 10,
+                                  penPoint, wallBrush)
+                else:
+                    # print path
+                    pass
 
     def drawStartEndNodes(self, Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd):
         scene.clear()
@@ -165,18 +174,6 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         maze = True
         global grid
         grid = utils.Grid(create_maze=True, size=GRIDSIZE)
-        for y in range(GRIDSIZE):
-            for x in range(GRIDSIZE):
-                if grid.to_ndarray()[y, x] == grid.WALL:
-                    # print wall
-                    scene.addRect(x * SIDE, y * SIDE, 10, 10,
-                                  penPoint, wallBrush)
-                else:
-                    # print path
-                    pass
-
-        grid = utils.Grid(custom_grid=grid.to_ndarray)
-        print(grid)
 
 
 if __name__ == "__main__":
