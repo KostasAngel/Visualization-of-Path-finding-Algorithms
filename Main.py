@@ -3,10 +3,10 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets, uic, QtTest
 
 import path_finding_algorithms.utils as utils
-from path_finding_algorithms.a_star import calculate as aStarCalculate
-from path_finding_algorithms.breadth_first_search import calculate as bfsCalculate
-from path_finding_algorithms.depth_first_search import calculate as dfsCalculate
-from path_finding_algorithms.dijkstras_algorithm import calculate as djkCalculate
+from path_finding_algorithms.a_star import calculate2 as aStarCalculate
+from path_finding_algorithms.breadth_first_search import calculate2 as bfsCalculate
+from path_finding_algorithms.depth_first_search import calculate2 as dfsCalculate
+from path_finding_algorithms.dijkstras_algorithm import calculate2 as djkCalculate
 
 qtcreator_file = "main_window.ui"  # Enter file here.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
@@ -31,6 +31,7 @@ pointBrushvisited = QtGui.QBrush(QtCore.Qt.white)
 pointBrushPath = QtGui.QBrush(QtCore.Qt.black)
 wallBrush = QtGui.QBrush(QtCore.Qt.darkYellow)
 maze = False
+grid = utils.Grid()
 
 
 class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -107,11 +108,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         startingPoint = (Xstart, Ystart)
         goalPoint = (Xgoal, Ygoal)
         text = self.chooseAlgorithm.currentText()
-        if maze == True:
-            print(maze)
-        else:
-            grid = utils.new_grid(GRIDSIZE)
-        result = ALGORITHMS[text](grid, startingPoint, goalPoint)
+        result = ALGORITHMS[text](startingPoint, goalPoint, grid)
         # enable scene to draw
         window.drawGrid(scene, penGrid, SIDE)
         # Draw grid
@@ -179,6 +176,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     pass
 
         grid = utils.Grid(custom_grid=grid.to_ndarray)
+        print(grid)
 
 
 if __name__ == "__main__":
