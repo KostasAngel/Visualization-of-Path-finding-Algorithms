@@ -1,6 +1,5 @@
 import random
 import sys
-
 from PyQt5 import QtCore, QtGui, QtWidgets, uic, QtTest
 
 import path_finding_algorithms.utils as utils
@@ -13,6 +12,7 @@ qtcreator_file = "main_window.ui"  # Enter file here.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
 GRIDSIZE = 64
 SIDE = 10
+
 # dictionary with implemented algorithms, when adding a new one we can update the dict only once
 ALGORITHMS = {"Breadth First Search": bfsCalculate,
               "Depth First Search": dfsCalculate,
@@ -29,6 +29,8 @@ penGrid = QtGui.QPen(QtCore.Qt.black)
 penVisited = QtGui.QPen(QtCore.Qt.darkRed)
 pointBrushvisited = QtGui.QBrush(QtCore.Qt.white)
 pointBrushPath = QtGui.QBrush(QtCore.Qt.black)
+wallBrush = QtGui.QBrush(QtCore.Qt.darkYellow)
+maze = False
 
 
 class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -41,7 +43,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.runPathFinding.clicked.connect(self.runAlgorithm)
         self.setCoordinates.clicked.connect(self.showCoordinates)
         self.setRandomCoordinates.clicked.connect(self.randomCoordinates)
-        # self.generateMaze.clicked.connect(self.generateMazes)
+        self.generateMaze.clicked.connect(self.generateMazes)
         self.runPathFinding.setEnabled(False)
         self.startXValue.setPlainText("0")
         self.startYValue.setPlainText("0")
@@ -95,6 +97,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.runPathFinding.setEnabled(False)
         window.setCoordinates.setEnabled(False)
         window.setRandomCoordinates.setEnabled(False)
+        window.generateMaze.setEnabled(False)
         # inputs to values
         Xstart = int(self.startXValue.toPlainText())
         Ystart = int(self.startYValue.toPlainText())
@@ -103,8 +106,11 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # assign to variables to run Algo
         startingPoint = (Xstart, Ystart)
         goalPoint = (Xgoal, Ygoal)
-        grid = utils.new_grid(GRIDSIZE)
         text = self.chooseAlgorithm.currentText()
+        if maze == True:
+            print(maze)
+        else:
+            grid = utils.new_grid(GRIDSIZE)
         result = ALGORITHMS[text](grid, startingPoint, goalPoint)
         # enable scene to draw
         window.drawGrid(scene, penGrid, SIDE)
@@ -120,6 +126,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.runPathFinding.setEnabled(True)
         window.setCoordinates.setEnabled(True)
         window.setRandomCoordinates.setEnabled(True)
+        window.generateMaze.setEnabled(True)
 
     def drawGrid(self, scene, penGrid, SIDE):
         self.graphicsView.setScene(scene)
@@ -156,9 +163,24 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE),
                       10, 10, penPoint, pointBrushEnd)
 
-    # def generateMazes(self)
+    def generateMazes(self):
+        global maze
+        maze = True
+        global grid
+        grid = utils.Grid(create_maze=True, size=GRIDSIZE)
+        for y in range(GRIDSIZE):
+            for x in range(GRIDSIZE):
+                if grid.to_ndarray()[y, x] == grid.WALL:
+                    # print wall
+                    scene.addRect(x * SIDE, y * SIDE, 10, 10,
+                                  penPoint, wallBrush)
+                else:
+                    # print path
+                    pass
 
-    # TO DO This function
+        grid = utils.Grid(custom_grid=grid.to_ndarray)
+
+
 if __name__ == "__main__":
     window = MyWindow()
     window.show()
