@@ -30,6 +30,7 @@ penVisited = QtGui.QPen(QtCore.Qt.darkRed)
 pointBrushvisited = QtGui.QBrush(QtCore.Qt.white)
 pointBrushPath = QtGui.QBrush(QtCore.Qt.black)
 wallBrush = QtGui.QBrush(QtCore.Qt.darkYellow)
+gridBrush = QtGui.QBrush(QtCore.Qt.lightGray)
 maze = False
 grid = utils.Grid()
 
@@ -132,6 +133,10 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 r = QtCore.QRectF(QtCore.QPointF(
                     i * SIDE, j * SIDE), QtCore.QSizeF(SIDE, SIDE))
                 scene.addRect(r, penGrid)
+        for i in range(GRIDSIZE):
+            for j in range(GRIDSIZE):
+                scene.addRect(j * SIDE, i * SIDE, 10, 10,
+                              penPoint, gridBrush)
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
                 if grid.to_ndarray()[y, x] == grid.WALL:
@@ -174,6 +179,15 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         maze = True
         global grid
         grid = utils.Grid(create_maze=True, size=GRIDSIZE)
+        maze_history = grid.get_maze_history()
+        for y in range(GRIDSIZE):
+            for x in range(GRIDSIZE):
+                scene.addRect(x * SIDE, y * SIDE, 10, 10,
+                              penPoint, wallBrush)
+        for x, y in maze_history:
+            QtTest.QTest.qWait(3)
+            scene.addRect(y * SIDE, x * SIDE, 10, 10,
+                          penPoint, gridBrush)
 
 
 if __name__ == "__main__":
