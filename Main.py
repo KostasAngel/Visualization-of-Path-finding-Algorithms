@@ -79,11 +79,25 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.runPathFinding.setEnabled(True)
 
     def randomCoordinates(self):
-        # Chose Random value
-        Xstart = int(random.uniform(0, 64))
-        Ystart = int(random.uniform(0, 64))
-        Xgoal = int(random.uniform(0, 64))
-        Ygoal = int(random.uniform(0, 64))
+        # check if there is a maze generated
+        if maze:
+            start = (int(random.uniform(0, 64)), int(random.uniform(0, 64)))
+            while (start not in maze_history):
+                start = (int(random.uniform(0, 64)),
+                         int(random.uniform(0, 64)))
+            goal = (int(random.uniform(0, 64)), int(random.uniform(0, 64)))
+            while (goal not in maze_history):
+                goal = (int(random.uniform(0, 64)), int(random.uniform(0, 64)))
+            Xstart = start[1]
+            Ystart = start[0]
+            Xgoal = goal[1]
+            Ygoal = goal[0]
+        else:
+            # Chose Random value
+            Xstart = int(random.uniform(0, 64))
+            Ystart = int(random.uniform(0, 64))
+            Xgoal = int(random.uniform(0, 64))
+            Ygoal = int(random.uniform(0, 64))
         # add Random value to text inputs
         self.startXValue.setPlainText(str(Xstart))
         self.startYValue.setPlainText(str(Ystart))
@@ -124,7 +138,6 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.runPathFinding.setEnabled(True)
         window.setCoordinates.setEnabled(True)
         window.setRandomCoordinates.setEnabled(True)
-        window.generateMaze.setEnabled(True)
 
     def drawGrid(self, scene, penGrid, SIDE):
         self.graphicsView.setScene(scene)
@@ -175,19 +188,25 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                       10, 10, penPoint, pointBrushEnd)
 
     def generateMazes(self):
+        self.runPathFinding.setEnabled(False)
+        window.setCoordinates.setEnabled(False)
+        window.setRandomCoordinates.setEnabled(False)
+        window.generateMaze.setEnabled(False)
         global maze
         maze = True
         global grid
         grid = utils.Grid(create_maze=True, size=GRIDSIZE)
+        global maze_history
         maze_history = grid.get_maze_history()
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
                 scene.addRect(x * SIDE, y * SIDE, 10, 10,
                               penPoint, wallBrush)
         for x, y in maze_history:
-            QtTest.QTest.qWait(3)
+            QtTest.QTest.qWait(2)
             scene.addRect(y * SIDE, x * SIDE, 10, 10,
                           penPoint, gridBrush)
+        window.setRandomCoordinates.setEnabled(True)
 
 
 if __name__ == "__main__":
