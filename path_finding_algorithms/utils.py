@@ -200,10 +200,9 @@ def calculate_path(start, goal, child_parent_pairs):
     :returns: List of points (tuples), from start to goal
     """
 
-    # TODO is there a better way to check this?
+    # if the goal is not in the child-parents pairs it means that a path to goal was not found
     if goal not in child_parent_pairs.keys():
-        raise AssertionError(
-            "No route to goal (goal not in child_parent_pairs)")
+        raise AssertionError("No route to goal found (goal not in child_parent_pairs)")
 
     reverse_path = [goal]
 
