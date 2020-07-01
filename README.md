@@ -14,3 +14,4 @@
 ## Informed (heuristic) search strategies
 
 ### A* Search
+Uses heuristics, here we implemented Manhattan distance and Euclidean distance. 
