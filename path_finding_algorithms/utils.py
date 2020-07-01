@@ -210,16 +210,6 @@ def calculate_path(start, goal, child_parent_pairs):
     return list(reversed(reverse_path))
 
 
-def new_grid(dim: int = 64, fill: str = " "):
-    """ Creates a new square grid.
-    TODO delete since it functionality is implemented in Grid class
-    :param dim: The dimension of the side of the required square grid, defaults to 64.
-    :param fill: A character representing each point in the grid, defaults to " ".
-    :returns: A square ndarray with the required dimensions and fill.
-    """
-    return np.array([[f'{fill}' for _ in range(dim)] for _ in range(dim)])
-
-
 def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=True):
     if type(grid) is Grid:
         grid = np.copy(grid.to_ndarray())
