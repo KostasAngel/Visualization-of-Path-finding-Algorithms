@@ -88,10 +88,10 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             goal = (int(random.uniform(0, 64)), int(random.uniform(0, 64)))
             while (goal not in maze_history):
                 goal = (int(random.uniform(0, 64)), int(random.uniform(0, 64)))
-            Xstart = start[1]
-            Ystart = start[0]
-            Xgoal = goal[1]
-            Ygoal = goal[0]
+            Xstart = start[0]
+            Ystart = start[1]
+            Xgoal = goal[0]
+            Ygoal = goal[1]
         else:
             # Chose Random value
             Xstart = int(random.uniform(0, 64))
@@ -141,20 +141,20 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def drawGrid(self, scene, penGrid, SIDE):
         self.graphicsView.setScene(scene)
-        for i in range(GRIDSIZE):
-            for j in range(GRIDSIZE):
+        for y in range(GRIDSIZE):
+            for x in range(GRIDSIZE):
                 r = QtCore.QRectF(QtCore.QPointF(
-                    i * SIDE, j * SIDE), QtCore.QSizeF(SIDE, SIDE))
+                    y * SIDE, x * SIDE), QtCore.QSizeF(SIDE, SIDE))
                 scene.addRect(r, penGrid)
-        for i in range(GRIDSIZE):
-            for j in range(GRIDSIZE):
-                scene.addRect(i * SIDE, j * SIDE, 10, 10,
+        for y in range(GRIDSIZE):
+            for x in range(GRIDSIZE):
+                scene.addRect(y * SIDE, x * SIDE, 10, 10,
                               penPoint, gridBrush)
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
                 if grid.to_ndarray()[y, x] == grid.WALL:
                     # print wall
-                    scene.addRect(x * SIDE, y * SIDE, 10, 10,
+                    scene.addRect(y * SIDE, x * SIDE, 10, 10,
                                   penPoint, wallBrush)
                 else:
                     # print path
@@ -174,14 +174,14 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                       10, 10, penPoint, pointBrushStart)
         scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE),
                       10, 10, penPoint, pointBrushEnd)
-        for x, y in visited:
+        for y, x in visited:
             QtTest.QTest.qWait(5)
-            scene.addRect(x * SIDE, y * SIDE, 10, 10,
+            scene.addRect(y * SIDE, x * SIDE, 10, 10,
                           penVisited, pointBrushvisited)
             scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE),
                           10, 10, penPoint, pointBrushStart)
-        for x, y in correctPath:
-            scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, pointBrushPath)
+        for y, x in correctPath:
+            scene.addRect(y * SIDE, x * SIDE, 10, 10, penPoint, pointBrushPath)
         scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE),
                       10, 10, penPoint, pointBrushStart)
         scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE),
@@ -200,11 +200,11 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         maze_history = grid.get_maze_history()
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
-                scene.addRect(y * SIDE, x * SIDE, 10, 10,
+                scene.addRect(x * SIDE, y * SIDE, 10, 10,
                               penPoint, wallBrush)
-        for y, x in maze_history:
+        for x, y in maze_history:
             QtTest.QTest.qWait(2)
-            scene.addRect(y * SIDE, x * SIDE, 10, 10,
+            scene.addRect(x * SIDE, y * SIDE, 10, 10,
                           penPoint, gridBrush)
         window.setRandomCoordinates.setEnabled(True)
 
