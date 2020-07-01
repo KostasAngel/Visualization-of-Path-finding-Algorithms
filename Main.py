@@ -1,18 +1,18 @@
 import random
 import sys
-
 from PyQt5 import QtCore, QtGui, QtWidgets, uic, QtTest
 
-import utils
-from a_star import calculate as aStarCalculate
-from breadth_first_search import calculate as bfsCalculate
-from depth_first_search import calculate as dfsCalculate
-from dijkstras_algorithm import calculate as djkCalculate
+import path_finding_algorithms.utils as utils
+from path_finding_algorithms.a_star import calculate2 as aStarCalculate
+from path_finding_algorithms.breadth_first_search import calculate2 as bfsCalculate
+from path_finding_algorithms.depth_first_search import calculate2 as dfsCalculate
+from path_finding_algorithms.dijkstras_algorithm import calculate2 as djkCalculate
 
-qtcreator_file = "mainWindow.ui"  # Enter file here.
+qtcreator_file = "main_window.ui"  # Enter file here.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
 GRIDSIZE = 64
 SIDE = 10
+
 # dictionary with implemented algorithms, when adding a new one we can update the dict only once
 ALGORITHMS = {"Breadth First Search": bfsCalculate,
               "Depth First Search": dfsCalculate,
@@ -29,6 +29,10 @@ penGrid = QtGui.QPen(QtCore.Qt.black)
 penVisited = QtGui.QPen(QtCore.Qt.darkRed)
 pointBrushvisited = QtGui.QBrush(QtCore.Qt.white)
 pointBrushPath = QtGui.QBrush(QtCore.Qt.black)
+wallBrush = QtGui.QBrush(QtCore.Qt.darkYellow)
+gridBrush = QtGui.QBrush(QtCore.Qt.lightGray)
+maze = False
+grid = utils.Grid()
 
 
 class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -75,11 +79,25 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.runPathFinding.setEnabled(True)
 
     def randomCoordinates(self):
-        # Chose Random value
-        Xstart = int(random.uniform(0, 64))
-        Ystart = int(random.uniform(0, 64))
-        Xgoal = int(random.uniform(0, 64))
-        Ygoal = int(random.uniform(0, 64))
+        # check if there is a maze generated
+        if maze:
+            start = (int(random.uniform(0, 64)), int(random.uniform(0, 64)))
+            while (start not in maze_history):
+                start = (int(random.uniform(0, 64)),
+                         int(random.uniform(0, 64)))
+            goal = (int(random.uniform(0, 64)), int(random.uniform(0, 64)))
+            while (goal not in maze_history):
+                goal = (int(random.uniform(0, 64)), int(random.uniform(0, 64)))
+            Xstart = start[1]
+            Ystart = start[0]
+            Xgoal = goal[1]
+            Ygoal = goal[0]
+        else:
+            # Chose Random value
+            Xstart = int(random.uniform(0, 64))
+            Ystart = int(random.uniform(0, 64))
+            Xgoal = int(random.uniform(0, 64))
+            Ygoal = int(random.uniform(0, 64))
         # add Random value to text inputs
         self.startXValue.setPlainText(str(Xstart))
         self.startYValue.setPlainText(str(Ystart))
@@ -95,6 +113,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.runPathFinding.setEnabled(False)
         window.setCoordinates.setEnabled(False)
         window.setRandomCoordinates.setEnabled(False)
+        window.generateMaze.setEnabled(False)
         # inputs to values
         Xstart = int(self.startXValue.toPlainText())
         Ystart = int(self.startYValue.toPlainText())
@@ -103,9 +122,8 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # assign to variables to run Algo
         startingPoint = (Xstart, Ystart)
         goalPoint = (Xgoal, Ygoal)
-        grid = utils.new_grid(GRIDSIZE)
         text = self.chooseAlgorithm.currentText()
-        result = ALGORITHMS[text](grid, startingPoint, goalPoint)
+        result = ALGORITHMS[text](startingPoint, goalPoint, grid)
         # enable scene to draw
         window.drawGrid(scene, penGrid, SIDE)
         # Draw grid
@@ -128,6 +146,19 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 r = QtCore.QRectF(QtCore.QPointF(
                     i * SIDE, j * SIDE), QtCore.QSizeF(SIDE, SIDE))
                 scene.addRect(r, penGrid)
+        for i in range(GRIDSIZE):
+            for j in range(GRIDSIZE):
+                scene.addRect(i * SIDE, j * SIDE, 10, 10,
+                              penPoint, gridBrush)
+        for y in range(GRIDSIZE):
+            for x in range(GRIDSIZE):
+                if grid.to_ndarray()[y, x] == grid.WALL:
+                    # print wall
+                    scene.addRect(x * SIDE, y * SIDE, 10, 10,
+                                  penPoint, wallBrush)
+                else:
+                    # print path
+                    pass
 
     def drawStartEndNodes(self, Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd):
         scene.clear()
@@ -156,11 +187,29 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE),
                       10, 10, penPoint, pointBrushEnd)
 
-    # def generateMazes(self)
+    def generateMazes(self):
+        self.runPathFinding.setEnabled(False)
+        window.setCoordinates.setEnabled(False)
+        window.setRandomCoordinates.setEnabled(False)
+        window.generateMaze.setEnabled(False)
+        global maze
+        maze = True
+        global grid
+        grid = utils.Grid(create_maze=True, size=GRIDSIZE)
+        global maze_history
+        maze_history = grid.get_maze_history()
+        for y in range(GRIDSIZE):
+            for x in range(GRIDSIZE):
+                scene.addRect(y * SIDE, x * SIDE, 10, 10,
+                              penPoint, wallBrush)
+        for y, x in maze_history:
+            QtTest.QTest.qWait(2)
+            scene.addRect(y * SIDE, x * SIDE, 10, 10,
+                          penPoint, gridBrush)
+        window.setRandomCoordinates.setEnabled(True)
 
-    # TO DO This function
+
 if __name__ == "__main__":
-
     window = MyWindow()
     window.show()
     sys.exit(app.exec_())
