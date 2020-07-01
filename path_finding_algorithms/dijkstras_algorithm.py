@@ -5,7 +5,7 @@ import numpy as np
 import path_finding_algorithms.utils as utils
 
 
-def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid()):
+def calculate(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid()):
     """ Finds path from start to goal using Dijkstra's algorithm.
 
     Implementation of this algorithm was based on the example provided in Wikipedia:
@@ -61,7 +61,7 @@ def main():
     # the code here is just for testing, the program can just call calculate() above and skip this
     grid = utils.Grid(size=19, create_maze=True)
 
-    res = calculate2(grid=grid, start=(0, 0), goal=(18, 18))
+    res = calculate(grid=grid, start=(0, 0), goal=(18, 18))
 
     # the following allows visualizing results in the terminal (thus only works when script is run from the terminal)
     utils.visualize_asciimatics(res)

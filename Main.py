@@ -4,10 +4,10 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets, uic, QtTest
 
 import path_finding_algorithms.utils as utils
-from path_finding_algorithms.a_star import calculate2 as aStarCalculate
-from path_finding_algorithms.breadth_first_search import calculate2 as bfsCalculate
-from path_finding_algorithms.depth_first_search import calculate2 as dfsCalculate
-from path_finding_algorithms.dijkstras_algorithm import calculate2 as djkCalculate
+from path_finding_algorithms.a_star import calculate as aStarCalculate
+from path_finding_algorithms.breadth_first_search import calculate as bfsCalculate
+from path_finding_algorithms.depth_first_search import calculate as dfsCalculate
+from path_finding_algorithms.dijkstras_algorithm import calculate as djkCalculate
 
 qtcreator_file = "main_window.ui"  # Enter file here.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
