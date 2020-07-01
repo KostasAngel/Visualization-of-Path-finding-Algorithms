@@ -144,8 +144,8 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         window.drawVisited(Xstart, Ystart, Xgoal, Ygoal,
                            penPoint, pointBrushStart, pointBrushEnd, penVisited, pointBrushvisited, visited,
                            correctPath, SIDE)
-        self.runPathFinding.setEnabled(True)
-        window.setCoordinates.setEnabled(True)
+        if maze == False:
+            window.setCoordinates.setEnabled(True)
         window.setRandomCoordinates.setEnabled(True)
 
     def drawGrid(self, scene, penGrid, SIDE):
