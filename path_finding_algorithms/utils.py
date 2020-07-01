@@ -68,16 +68,19 @@ class Grid(object):
                         queue.append(neighbor)
 
     def to_ndarray(self):
-        """ Returns the grid as numpy array.
+        """ Returns the grid as an numpy array.
 
         :return: A 2D ndarray representing the grid.
         """
         return self.grid
 
     def get_maze_history(self):
-        """
-        TODO
-        :return:
+        """ Returns a list representing the creation of the grid maze, if one was requested (if it was not,
+        the return list will be empty). The maze creation essentially starts with a grid consisting only of "walls",
+        and gradually marks points as "corridors" (in the order they appear in the returned list), with the use of a
+        DFS algorithm.
+
+        :return: List of "corridor" points (tuples), corresponding to the order in which the maze was created
         """
         return self.maze_history
 
