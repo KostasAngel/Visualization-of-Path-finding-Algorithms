@@ -1,5 +1,6 @@
 import random
 import sys
+
 from PyQt5 import QtCore, QtGui, QtWidgets, uic, QtTest
 
 import path_finding_algorithms.utils as utils
@@ -18,8 +19,8 @@ ALGORITHMS = {"Breadth First Search": bfsCalculate,
               "Depth First Search": dfsCalculate,
               "Dijkstra's Algorithm": djkCalculate,
               "A* (Manhattan distance)": aStarCalculate,
-              "A* (Euclidean distance)": lambda grid, start, goal: aStarCalculate(grid, start, goal,
-                                                                                  heuristic="euclidean")}
+              "A* (Euclidean distance)": lambda start, goal, gr: aStarCalculate(start, goal, gr,
+                                                                                heuristic="euclidean")}
 app = QtWidgets.QApplication(sys.argv)
 scene = QtWidgets.QGraphicsScene()
 penPoint = QtGui.QPen(QtCore.Qt.red)
@@ -60,15 +61,16 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def showCoordinates(self):
         # Check if there are values to the boxes.
         # inputs to values
-        if not(int(self.startXValue.toPlainText()) >= 0 and int(self.startXValue.toPlainText()) < 64):
+        if not (int(self.startXValue.toPlainText()) >= 0 and int(self.startXValue.toPlainText()) < 64):
             self.startXValue.setPlainText("0")
-        if not(int(self.startYValue.toPlainText()) >= 0 and int(self.startYValue.toPlainText()) < 64):
+        if not (int(self.startYValue.toPlainText()) >= 0 and int(self.startYValue.toPlainText()) < 64):
             self.startYValue.setPlainText("0")
-        if not(int(self.goalXValue.toPlainText()) >= 0 and int(self.goalXValue.toPlainText()) < 64):
+        if not (int(self.goalXValue.toPlainText()) >= 0 and int(self.goalXValue.toPlainText()) < 64):
             self.goalXValue.setPlainText("63")
-        if not(int(self.goalYValue.toPlainText()) >= 0 and int(self.goalYValue.toPlainText()) < 64):
+        if not (int(self.goalYValue.toPlainText()) >= 0 and int(self.goalYValue.toPlainText()) < 64):
             self.goalYValue.setPlainText("63")
-        if (self.startXValue.toPlainText() == self.goalXValue.toPlainText()) and (self.startYValue.toPlainText() == self.goalYValue.toPlainText()):
+        if (self.startXValue.toPlainText() == self.goalXValue.toPlainText()) and (
+                self.startYValue.toPlainText() == self.goalYValue.toPlainText()):
             self.goalXValue.setPlainText(str(int(random.uniform(0, 64))))
             self.goalYValue.setPlainText(str(int(random.uniform(0, 64))))
         Xstart = int(self.startXValue.toPlainText())
@@ -140,7 +142,8 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         visited = result.get("visited")
         # GridDrawVisited
         window.drawVisited(Xstart, Ystart, Xgoal, Ygoal,
-                           penPoint, pointBrushStart, pointBrushEnd, penVisited, pointBrushvisited, visited, correctPath, SIDE)
+                           penPoint, pointBrushStart, pointBrushEnd, penVisited, pointBrushvisited, visited,
+                           correctPath, SIDE)
         self.runPathFinding.setEnabled(True)
         window.setCoordinates.setEnabled(True)
         window.setRandomCoordinates.setEnabled(True)
@@ -175,7 +178,8 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                       10, 10, penPoint, pointBrushEnd)
 
     def drawVisited(self, Xstart, Ystart, Xgoal, Ygoal,
-                    penPoint, pointBrushStart, pointBrushEnd, penVisited, pointBrushvisited, visited, correctPath, SIDE):
+                    penPoint, pointBrushStart, pointBrushEnd, penVisited, pointBrushvisited, visited, correctPath,
+                    SIDE):
         scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE),
                       10, 10, penPoint, pointBrushStart)
         scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE),
