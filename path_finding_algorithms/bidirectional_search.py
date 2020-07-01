@@ -1,6 +1,6 @@
 from collections import deque
 
-import utils
+import path_finding_algorithms.utils as utils
 
 
 def calculate(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid()):
