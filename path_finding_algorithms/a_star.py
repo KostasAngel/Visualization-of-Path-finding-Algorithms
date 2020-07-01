@@ -1,16 +1,8 @@
-import numpy as np
-
 import path_finding_algorithms.heuristics as heuristics
 import path_finding_algorithms.utils as utils
 
 
-def calculate(grid: np.ndarray, start: tuple, goal: tuple, heuristic: str = "manhattan"):
-    # temporary for backwards compatibility
-    # here I'm replacing the grids from the old method to make sure the revised algorithms work as expected
-    return calculate2(start, goal, utils.Grid(), heuristic)
-
-
-def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid(), heuristic: str = "manhattan"):
+def calculate(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid(), heuristic: str = "manhattan"):
     """ Finds path from start to goal using the A* algorithm.
 
     Implementation of this algorithm was based on the example provided in Wikipedia:
@@ -39,7 +31,7 @@ def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid(), heuri
 
     f_scores = dict()  # the f_score is calculated by f(n) = g(n) + h(n)
     f_scores[start] = g_scores[start] + \
-        h_score(start, goal)  # the g_score of start is 0
+                      h_score(start, goal)  # the g_score of start is 0
 
     # create a priority queue, and add start to it; priority in A* corresponds to the fScore, and the points with
     # lowest fScores are considered first
@@ -79,7 +71,7 @@ def main():
     # the code here is just for testing, the program can just call calculate() above and skip this
     grid = utils.Grid(size=19, create_maze=True)
 
-    res = calculate2(grid=grid, start=(
+    res = calculate(grid=grid, start=(
         0, 0), goal=(18, 18), heuristic="manhattan")
 
     # the following allows visualizing results in the terminal (thus only works when script is run from the terminal)

@@ -68,16 +68,19 @@ class Grid(object):
                         queue.append(neighbor)
 
     def to_ndarray(self):
-        """ Returns the grid as numpy array.
+        """ Returns the grid as an numpy array.
 
         :return: A 2D ndarray representing the grid.
         """
         return self.grid
 
     def get_maze_history(self):
-        """
-        TODO
-        :return:
+        """ Returns a list representing the creation of the grid maze, if one was requested (if it was not,
+        the return list will be empty). The maze creation essentially starts with a grid consisting only of "walls",
+        and gradually marks points as "corridors" (in the order they appear in the returned list), with the use of a
+        DFS algorithm.
+
+        :return: List of "corridor" points (tuples), corresponding to the order in which the maze was created
         """
         return self.maze_history
 
@@ -197,10 +200,9 @@ def calculate_path(start, goal, child_parent_pairs):
     :returns: List of points (tuples), from start to goal
     """
 
-    # TODO is there a better way to check this?
+    # if the goal is not in the child-parents pairs it means that a path to goal was not found
     if goal not in child_parent_pairs.keys():
-        raise AssertionError(
-            "No route to goal (goal not in child_parent_pairs)")
+        raise AssertionError("No route to goal found (goal not in child_parent_pairs)")
 
     reverse_path = [goal]
 
@@ -208,16 +210,6 @@ def calculate_path(start, goal, child_parent_pairs):
         reverse_path.append(child_parent_pairs[reverse_path[-1]])
 
     return list(reversed(reverse_path))
-
-
-def new_grid(dim: int = 64, fill: str = " "):
-    """ Creates a new square grid.
-    TODO delete since it functionality is implemented in Grid class
-    :param dim: The dimension of the side of the required square grid, defaults to 64.
-    :param fill: A character representing each point in the grid, defaults to " ".
-    :returns: A square ndarray with the required dimensions and fill.
-    """
-    return np.array([[f'{fill}' for _ in range(dim)] for _ in range(dim)])
 
 
 def visualize_grid(grid, visited=None, path=None, start=None, goal=None, legend=True):

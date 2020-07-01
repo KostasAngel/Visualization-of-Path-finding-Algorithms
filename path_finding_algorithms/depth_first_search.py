@@ -1,17 +1,9 @@
 from collections import deque
 
-import numpy as np
-
 import path_finding_algorithms.utils as utils
 
 
-def calculate(grid: np.ndarray, start: tuple, goal: tuple):
-    # temporary for backwards compatibility
-    # here I'm replacing the grids from the old method to make sure the revised algorithms work as expected
-    return calculate2(start, goal, utils.Grid())
-
-
-def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid()):
+def calculate(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid()):
     """ Finds path from start to goal using the Depth-First Search algorithm.
 
     Works by creating a double ended queue (deque) - by always appending to the **right** of the queue,
@@ -54,7 +46,7 @@ def main():
     # the code here is just for testing, the program can just call calculate() above and skip this
     grid = utils.Grid(size=19, create_maze=True)
 
-    res = calculate2(grid=grid, start=(0, 0), goal=(18, 18))
+    res = calculate(grid=grid, start=(0, 0), goal=(18, 18))
 
     # the following allows visualizing results in the terminal (thus only works when script is run from the terminal)
     utils.visualize_asciimatics(res)
