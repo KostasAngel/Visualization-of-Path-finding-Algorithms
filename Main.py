@@ -142,8 +142,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         visited = result.get("visited")
         # GridDrawVisited
         window.drawVisited(Xstart, Ystart, Xgoal, Ygoal,
-                           penPoint, pointBrushStart, pointBrushEnd, penVisited, pointBrushvisited, visited,
-                           correctPath, SIDE)
+                           penPoint, pointBrushStart, pointBrushEnd, penVisited, pointBrushvisited, visited, correctPath, SIDE)
         if maze == False:
             window.setCoordinates.setEnabled(True)
         window.setRandomCoordinates.setEnabled(True)
