@@ -2,7 +2,7 @@ from collections import deque
 
 import numpy as np
 
-import utils
+import path_finding_algorithms.utils as utils
 
 
 def calculate(grid: np.ndarray, start: tuple, goal: tuple):

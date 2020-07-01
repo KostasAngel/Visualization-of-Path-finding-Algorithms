@@ -1,7 +1,7 @@
 import numpy as np
 
-import heuristics
-import utils
+import path_finding_algorithms.heuristics as heuristics
+import path_finding_algorithms.utils as utils
 
 
 def calculate(grid: np.ndarray, start: tuple, goal: tuple, heuristic: str = "manhattan"):
@@ -38,7 +38,8 @@ def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid(), heuri
     g_scores[start] = 0
 
     f_scores = dict()  # the f_score is calculated by f(n) = g(n) + h(n)
-    f_scores[start] = g_scores[start] + h_score(start, goal)  # the g_score of start is 0
+    f_scores[start] = g_scores[start] + \
+        h_score(start, goal)  # the g_score of start is 0
 
     # create a priority queue, and add start to it; priority in A* corresponds to the fScore, and the points with
     # lowest fScores are considered first
@@ -57,7 +58,8 @@ def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid(), heuri
             break
 
         for neighbor in grid.get_point_neighbors(current_point):
-            tentative_g_score = g_scores[current_point] + 1  # neighbors always 1 step away from current
+            # neighbors always 1 step away from current
+            tentative_g_score = g_scores[current_point] + 1
             if neighbor in g_scores and g_scores[neighbor] < tentative_g_score:
                 # neighbor already reached from another point that resulted in a lower g_score, so skip it
                 continue
@@ -77,7 +79,8 @@ def main():
     # the code here is just for testing, the program can just call calculate() above and skip this
     grid = utils.Grid(size=19, create_maze=True)
 
-    res = calculate2(grid=grid, start=(0, 0), goal=(18, 18), heuristic="manhattan")
+    res = calculate2(grid=grid, start=(
+        0, 0), goal=(18, 18), heuristic="manhattan")
 
     # the following allows visualizing results in the terminal (thus only works when script is run from the terminal)
     utils.visualize_asciimatics(res)

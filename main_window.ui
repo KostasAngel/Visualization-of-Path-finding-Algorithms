@@ -19,7 +19,7 @@
      <rect>
       <x>70</x>
       <y>250</y>
-      <width>181</width>
+      <width>281</width>
       <height>20</height>
      </rect>
     </property>
@@ -208,8 +208,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="runPathFinding">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>380</y>
+      <x>120</x>
+      <y>390</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -267,7 +267,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>   Random
-coordinates</string>
+Coordinates</string>
     </property>
    </widget>
    <widget class="QLabel" name="labelAlgorithm_2">
@@ -337,7 +337,21 @@ coordinates</string>
     </property>
     <property name="text">
      <string>Set 
-coordinates</string>
+Coordinates</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="generateMaze">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>310</y>
+      <width>81</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Genarate
+Maze</string>
     </property>
    </widget>
   </widget>
