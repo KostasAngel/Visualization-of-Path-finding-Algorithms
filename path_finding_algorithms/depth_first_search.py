@@ -1,14 +1,6 @@
 from collections import deque
 
-import numpy as np
-
 import path_finding_algorithms.utils as utils
-
-
-def calculate(grid: np.ndarray, start: tuple, goal: tuple):
-    # temporary for backwards compatibility
-    # here I'm replacing the grids from the old method to make sure the revised algorithms work as expected
-    return calculate2(start, goal, utils.Grid())
 
 
 def calculate2(start: tuple, goal: tuple, grid: utils.Grid = utils.Grid()):
