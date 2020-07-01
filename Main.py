@@ -148,7 +148,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 scene.addRect(r, penGrid)
         for i in range(GRIDSIZE):
             for j in range(GRIDSIZE):
-                scene.addRect(j * SIDE, i * SIDE, 10, 10,
+                scene.addRect(i * SIDE, j * SIDE, 10, 10,
                               penPoint, gridBrush)
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
