@@ -68,6 +68,9 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.goalXValue.setPlainText("63")
         if not(int(self.goalYValue.toPlainText()) >= 0 and int(self.goalYValue.toPlainText()) < 64):
             self.goalYValue.setPlainText("63")
+        if (self.startXValue.toPlainText() == self.goalXValue.toPlainText()) and (self.startYValue.toPlainText() == self.goalYValue.toPlainText()):
+            self.goalXValue.setPlainText(str(int(random.uniform(0, 64))))
+            self.goalYValue.setPlainText(str(int(random.uniform(0, 64))))
         Xstart = int(self.startXValue.toPlainText())
         Ystart = int(self.startYValue.toPlainText())
         Xgoal = int(self.goalXValue.toPlainText())
@@ -98,6 +101,9 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             Ystart = int(random.uniform(0, 64))
             Xgoal = int(random.uniform(0, 64))
             Ygoal = int(random.uniform(0, 64))
+            if (Xstart == Xgoal) and (Ystart == Ygoal):
+                Xgoal = int(random.uniform(0, 64))
+                Ygoal = int(random.uniform(0, 64))
         # add Random value to text inputs
         self.startXValue.setPlainText(str(Xstart))
         self.startYValue.setPlainText(str(Ystart))
