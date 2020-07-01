@@ -202,7 +202,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             for x in range(GRIDSIZE):
                 scene.addRect(y * SIDE, x * SIDE, 10, 10,
                               penPoint, wallBrush)
-        for x, y in maze_history:
+        for y, x in maze_history:
             QtTest.QTest.qWait(2)
             scene.addRect(y * SIDE, x * SIDE, 10, 10,
                           penPoint, gridBrush)
