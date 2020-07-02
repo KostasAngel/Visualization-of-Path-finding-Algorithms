@@ -86,26 +86,25 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def randomCoordinates(self):
         # check if there is a maze generated
         if maze:
-            start = (int(random.uniform(0, 64)), int(random.uniform(0, 64)))
+            start = (random.randint(0, 64), random.randint(0, 64))
             while (start not in maze_history):
-                start = (int(random.uniform(0, 64)),
-                         int(random.uniform(0, 64)))
-            goal = (int(random.uniform(0, 64)), int(random.uniform(0, 64)))
+                start = (random.randint(0, 64), random.randint(0, 64))
+            goal = (random.randint(0, 64), random.randint(0, 64))
             while (goal not in maze_history):
-                goal = (int(random.uniform(0, 64)), int(random.uniform(0, 64)))
+                goal = (random.randint(0, 64), random.randint(0, 64))
             Xstart = start[0]
             Ystart = start[1]
             Xgoal = goal[0]
             Ygoal = goal[1]
         else:
             # Chose Random value
-            Xstart = int(random.uniform(0, 64))
-            Ystart = int(random.uniform(0, 64))
-            Xgoal = int(random.uniform(0, 64))
-            Ygoal = int(random.uniform(0, 64))
+            Xstart = random.randint(0, 64)
+            Ystart = random.randint(0, 64)
+            Xgoal = random.randint(0, 64)
+            Ygoal = random.randint(0, 64)
             if (Xstart == Xgoal) and (Ystart == Ygoal):
-                Xgoal = int(random.uniform(0, 64))
-                Ygoal = int(random.uniform(0, 64))
+                Xgoal = random.randint(0, 64)
+                Ygoal = random.randint(0, 64)
         # add Random value to text inputs
         self.startXValue.setPlainText(str(Xstart))
         self.startYValue.setPlainText(str(Ystart))
