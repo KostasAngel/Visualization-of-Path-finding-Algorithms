@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Path Finding Visuallization</string>
+   <string>Path Finding Visualization</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QComboBox" name="chooseAlgorithm">
