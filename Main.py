@@ -1,7 +1,9 @@
 import random
 import sys
+from pathlib import Path
 
 from PyQt5 import QtCore, QtGui, QtWidgets, uic, QtTest
+from PyQt5.QtGui import QImage, QPainter
 
 import path_finding_algorithms.utils as utils
 from path_finding_algorithms.a_star import calculate as aStarCalculate
@@ -38,7 +40,7 @@ grid = utils.Grid()
 
 class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
-    def __init__(self):
+    def __init__(self, record=False):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
@@ -140,8 +142,8 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         correctPath = result.get("path")
         visited = result.get("visited")
         # GridDrawVisited
-        window.drawVisited(Xstart, Ystart, Xgoal, Ygoal,
-                           penPoint, pointBrushStart, pointBrushEnd, penVisited, pointBrushvisited, visited, correctPath, SIDE)
+        window.drawVisited(Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd, penVisited,
+                           pointBrushvisited, visited, correctPath, SIDE)
         if maze == False:
             window.setCoordinates.setEnabled(True)
         window.setRandomCoordinates.setEnabled(True)
@@ -151,19 +153,16 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.graphicsView.setScene(scene)
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
-                r = QtCore.QRectF(QtCore.QPointF(
-                    y * SIDE, x * SIDE), QtCore.QSizeF(SIDE, SIDE))
+                r = QtCore.QRectF(QtCore.QPointF(y * SIDE, x * SIDE), QtCore.QSizeF(SIDE, SIDE))
                 scene.addRect(r, penGrid)
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
-                scene.addRect(y * SIDE, x * SIDE, 10, 10,
-                              penPoint, gridBrush)
+                scene.addRect(y * SIDE, x * SIDE, 10, 10, penPoint, gridBrush)
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
                 if grid.to_ndarray()[y, x] == grid.WALL:
                     # print wall
-                    scene.addRect(y * SIDE, x * SIDE, 10, 10,
-                                  penPoint, wallBrush)
+                    scene.addRect(y * SIDE, x * SIDE, 10, 10, penPoint, wallBrush)
                 else:
                     # print path
                     pass
@@ -171,30 +170,21 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def drawStartEndNodes(self, Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd):
         scene.clear()
         window.drawGrid(scene, penGrid, SIDE)
-        scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE),
-                      10, 10, penPoint, pointBrushStart)
-        scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE),
-                      10, 10, penPoint, pointBrushEnd)
+        scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
+        scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
 
-    def drawVisited(self, Xstart, Ystart, Xgoal, Ygoal,
-                    penPoint, pointBrushStart, pointBrushEnd, penVisited, pointBrushvisited, visited, correctPath,
-                    SIDE):
-        scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE),
-                      10, 10, penPoint, pointBrushStart)
-        scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE),
-                      10, 10, penPoint, pointBrushEnd)
+    def drawVisited(self, Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd, penVisited,
+                    pointBrushvisited, visited, correctPath, SIDE):
+        scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
+        scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
         for y, x in visited:
             QtTest.QTest.qWait(5)
-            scene.addRect(y * SIDE, x * SIDE, 10, 10,
-                          penVisited, pointBrushvisited)
-            scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE),
-                          10, 10, penPoint, pointBrushStart)
+            scene.addRect(y * SIDE, x * SIDE, 10, 10, penVisited, pointBrushvisited)
+            scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
         for y, x in correctPath:
             scene.addRect(y * SIDE, x * SIDE, 10, 10, penPoint, pointBrushPath)
-        scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE),
-                      10, 10, penPoint, pointBrushStart)
-        scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE),
-                      10, 10, penPoint, pointBrushEnd)
+        scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
+        scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
 
     def generateMazes(self):
         self.runPathFinding.setEnabled(False)
@@ -209,12 +199,17 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         maze_history = grid.get_maze_history()
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
-                scene.addRect(x * SIDE, y * SIDE, 10, 10,
-                              penPoint, wallBrush)
-        for x, y in maze_history:
+                scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, wallBrush)
+        im = QImage(int(scene.sceneRect().width()), int(scene.sceneRect().height()),
+                    QImage.Format_ARGB32_Premultiplied)
+        painter = QPainter(im)
+        for i, (x, y) in enumerate(maze_history):
             QtTest.QTest.qWait(2)
-            scene.addRect(x * SIDE, y * SIDE, 10, 10,
-                          penPoint, gridBrush)
+            scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, gridBrush)
+            # if i % 10 == 0:
+            scene.render(painter)
+            im.save(str(Path("/home/marios/Downloads/generate_maze") / f"frame{i:05d}.png"))
+        painter.end()
         window.setRandomCoordinates.setEnabled(True)
 
 
