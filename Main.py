@@ -24,7 +24,6 @@ ALGORITHMS = {"Breadth First Search": bfs_calculate,
               "A* (Euclidean distance)": lambda st, goal, gr: a_star_calculate(st, goal, gr, heuristic="euclidean")}
 
 app = QtWidgets.QApplication(sys.argv)
-scene = QtWidgets.QGraphicsScene()
 
 penPoint = QtGui.QPen(QtCore.Qt.gray)
 pointBrushEnd = QtGui.QBrush(QtCore.Qt.red)
@@ -45,6 +44,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
+        self.scene = QtWidgets.QGraphicsScene()
         # Buttons
         self.runPathFinding.clicked.connect(self.run_algorithm)
         self.setCoordinates.clicked.connect(self.show_coordinates)
@@ -63,7 +63,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.grid = utils.Grid()
 
         # GridDraw
-        self.draw_grid(scene, penGrid, SIDE)
+        self.draw_grid(self.scene, penGrid, SIDE)
 
     def show_coordinates(self):
         # Check if there are values to the boxes.
@@ -85,7 +85,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         Xgoal = int(self.goalXValue.toPlainText())
         Ygoal = int(self.goalYValue.toPlainText())
         # GridDraw
-        window.draw_grid(scene, penGrid, SIDE)
+        window.draw_grid(self.scene, penGrid, SIDE)
         window.draw_start_end_nodes(Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd)
         self.runPathFinding.setEnabled(True)
 
@@ -117,7 +117,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.goalXValue.setPlainText(str(Xgoal))
         self.goalYValue.setPlainText(str(Ygoal))
         # Draw
-        window.draw_grid(scene, penGrid, SIDE)
+        window.draw_grid(self.scene, penGrid, SIDE)
         window.draw_start_end_nodes(Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd)
         self.runPathFinding.setEnabled(True)
 
@@ -137,7 +137,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         text = self.chooseAlgorithm.currentText()
         result = ALGORITHMS[text](startingPoint, goalPoint, self.grid)
         # enable scene to draw
-        window.draw_grid(scene, penGrid, SIDE)
+        window.draw_grid(self.scene, penGrid, SIDE)
         # Draw grid
         window.draw_start_end_nodes(Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd)
         # Get paths
@@ -170,23 +170,23 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     pass
 
     def draw_start_end_nodes(self, Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd):
-        scene.clear()
-        window.draw_grid(scene, penGrid, SIDE)
-        scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
-        scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
+        self.scene.clear()
+        window.draw_grid(self.scene, penGrid, SIDE)
+        self.scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
+        self.scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
 
     def draw_visited(self, Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd, penVisited,
                      pointBrushvisited, visited, correctPath, SIDE):
-        scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
-        scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
+        self.scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
+        self.scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
         for y, x in visited:
             QtTest.QTest.qWait(5)
-            scene.addRect(y * SIDE, x * SIDE, 10, 10, penVisited, pointBrushvisited)
-            scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
+            self.scene.addRect(y * SIDE, x * SIDE, 10, 10, penVisited, pointBrushvisited)
+            self.scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
         for y, x in correctPath:
-            scene.addRect(y * SIDE, x * SIDE, 10, 10, penPoint, pointBrushPath)
-        scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
-        scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
+            self.scene.addRect(y * SIDE, x * SIDE, 10, 10, penPoint, pointBrushPath)
+        self.scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
+        self.scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
 
     def generate_maze(self):
         self.runPathFinding.setEnabled(False)
@@ -197,15 +197,15 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.grid = utils.Grid(create_maze=True, size=GRIDSIZE)
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
-                scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, wallBrush)
-        im = QImage(int(scene.sceneRect().width()), int(scene.sceneRect().height()),
+                self.scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, wallBrush)
+        im = QImage(int(self.scene.sceneRect().width()), int(self.scene.sceneRect().height()),
                     QImage.Format_ARGB32_Premultiplied)
         painter = QPainter(im)
         for i, (x, y) in enumerate(self.grid.get_maze_history()):
             QtTest.QTest.qWait(2)
-            scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, gridBrush)
+            self.scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, gridBrush)
             if False:
-                scene.render(painter)
+                self.scene.render(painter)
                 im.save(str(Path("/home/marios/Downloads/generate_maze") / f"frame{i:05d}.png"))
         painter.end()
         window.setRandomCoordinates.setEnabled(True)
