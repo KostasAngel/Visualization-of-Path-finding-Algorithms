@@ -6,23 +6,23 @@ from PyQt5 import QtCore, QtGui, QtWidgets, uic, QtTest
 from PyQt5.QtGui import QColor, QImage, QPainter
 
 import path_finding_algorithms.utils as utils
-from path_finding_algorithms.a_star import calculate as aStarCalculate
-from path_finding_algorithms.breadth_first_search import calculate as bfsCalculate
-from path_finding_algorithms.depth_first_search import calculate as dfsCalculate
-from path_finding_algorithms.dijkstras_algorithm import calculate as djkCalculate
+from path_finding_algorithms.a_star import calculate as a_star_calculate
+from path_finding_algorithms.breadth_first_search import calculate as bfs_calculate
+from path_finding_algorithms.depth_first_search import calculate as dfs_calculate
+from path_finding_algorithms.dijkstras_algorithm import calculate as djk_calculate
 
 qtcreator_file = "main_window.ui"  # Enter file here.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
 GRIDSIZE = 64
 SIDE = 10
 
-# dictionary with implemented algorithms, when adding a new one we can update the dict only once
-ALGORITHMS = {"Breadth First Search": bfsCalculate,
-              "Depth First Search": dfsCalculate,
-              "Dijkstra's Algorithm": djkCalculate,
-              "A* (Manhattan distance)": aStarCalculate,
-              "A* (Euclidean distance)": lambda start, goal, gr: aStarCalculate(start, goal, gr,
-                                                                                heuristic="euclidean")}
+# dictionary with implemented algorithms
+ALGORITHMS = {"Breadth First Search": bfs_calculate,
+              "Depth First Search": dfs_calculate,
+              "Dijkstra's Algorithm": djk_calculate,
+              "A* (Manhattan distance)": a_star_calculate,
+              "A* (Euclidean distance)": lambda st, goal, gr: a_star_calculate(st, goal, gr, heuristic="euclidean")}
+
 app = QtWidgets.QApplication(sys.argv)
 scene = QtWidgets.QGraphicsScene()
 
