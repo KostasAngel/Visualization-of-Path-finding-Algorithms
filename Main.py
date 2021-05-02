@@ -26,7 +26,7 @@ ALGORITHMS = {"Breadth First Search": bfs_calculate,
 app = QtWidgets.QApplication(sys.argv)
 
 penPoint = QtGui.QPen(QtCore.Qt.gray)
-pointBrushEnd = QtGui.QBrush(QtCore.Qt.red)
+pointBrushEnd = QtGui.QBrush(QtCore.Qt.green)
 pointBrushStart = QtGui.QBrush(QtCore.Qt.blue)
 
 penGrid = QtGui.QPen(QtCore.Qt.black)
