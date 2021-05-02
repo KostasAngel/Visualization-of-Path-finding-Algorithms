@@ -37,7 +37,6 @@ pointBrushPath = QtGui.QBrush(QColor("#5fd7ff"))
 
 wallBrush = QtGui.QBrush(QtCore.Qt.darkYellow)
 gridBrush = QtGui.QBrush(QtCore.Qt.lightGray)
-maze = False
 grid = utils.Grid()
 
 
@@ -62,6 +61,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.chooseAlgorithm.addItem(algorithm)
         # GridDraw
         self.draw_grid(scene, penGrid, SIDE)
+        self.maze = False
 
     def show_coordinates(self):
         # Check if there are values to the boxes.
@@ -89,7 +89,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def random_coordinates(self):
         # check if there is a maze generated
-        if maze:
+        if self.maze:
             start = (random.randint(0, 64), random.randint(0, 64))
             while start not in maze_history:
                 start = (random.randint(0, 64), random.randint(0, 64))
@@ -144,7 +144,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # GridDrawVisited
         window.draw_visited(Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd, penVisited,
                             pointBrushVisited, visited, correctPath, SIDE)
-        if maze == False:
+        if not self.maze:
             window.setCoordinates.setEnabled(True)
         window.setRandomCoordinates.setEnabled(True)
         self.runPathFinding.setEnabled(True)
@@ -191,8 +191,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         window.setCoordinates.setEnabled(False)
         window.setRandomCoordinates.setEnabled(False)
         window.generateMaze.setEnabled(False)
-        global maze
-        maze = True
+        self.maze = True
         global grid
         grid = utils.Grid(create_maze=True, size=GRIDSIZE)
         global maze_history
