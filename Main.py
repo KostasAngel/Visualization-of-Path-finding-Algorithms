@@ -65,6 +65,11 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # GridDraw
         self.draw_grid(self.scene, penGrid, SIDE)
 
+        # For recording UI for demo GIFs
+        self.frame = QImage(int(self.scene.sceneRect().width()), int(self.scene.sceneRect().height()),
+                            QImage.Format_ARGB32_Premultiplied)
+        self.painter = QPainter(self.frame)
+
     def show_coordinates(self):
         # Check if there are values to the boxes.
         # inputs to values
@@ -198,17 +203,19 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
                 self.scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, wallBrush)
-        im = QImage(int(self.scene.sceneRect().width()), int(self.scene.sceneRect().height()),
-                    QImage.Format_ARGB32_Premultiplied)
-        painter = QPainter(im)
+        # im = QImage(int(self.scene.sceneRect().width()), int(self.scene.sceneRect().height()),
+        #             QImage.Format_ARGB32_Premultiplied)
+        # painter = QPainter(im)
         for i, (x, y) in enumerate(self.grid.get_maze_history()):
             QtTest.QTest.qWait(2)
             self.scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, gridBrush)
-            if False:
-                self.scene.render(painter)
-                im.save(str(Path("/home/marios/Downloads/generate_maze") / f"frame{i:05d}.png"))
-        painter.end()
+            if i % 100 == 0:
+                self.render_and_save_frame(i)
         window.setRandomCoordinates.setEnabled(True)
+
+    def render_and_save_frame(self, frame_name):
+        self.scene.render(self.painter)
+        self.frame.save(str(Path("/home/marios/Downloads/generate_maze") / f"frame{frame_name:05d}.png"))
 
 
 if __name__ == "__main__":
