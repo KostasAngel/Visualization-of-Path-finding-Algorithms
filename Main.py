@@ -66,16 +66,16 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def show_coordinates(self):
         # Check if there are values to the boxes.
         # inputs to values
-        if not (0 <= int(self.startXValue.toPlainText()) < 64):
+        if not 0 <= int(self.startXValue.toPlainText()) < 64:
             self.startXValue.setPlainText("0")
-        if not (0 <= int(self.startYValue.toPlainText()) < 64):
+        if not 0 <= int(self.startYValue.toPlainText()) < 64:
             self.startYValue.setPlainText("0")
-        if not (0 <= int(self.goalXValue.toPlainText()) < 64):
+        if not 0 <= int(self.goalXValue.toPlainText()) < 64:
             self.goalXValue.setPlainText("63")
-        if not (0 <= int(self.goalYValue.toPlainText()) < 64):
+        if not 0 <= int(self.goalYValue.toPlainText()) < 64:
             self.goalYValue.setPlainText("63")
-        if (self.startXValue.toPlainText() == self.goalXValue.toPlainText()) and (
-                self.startYValue.toPlainText() == self.goalYValue.toPlainText()):
+        if self.startXValue.toPlainText() == self.goalXValue.toPlainText() and \
+                self.startYValue.toPlainText() == self.goalYValue.toPlainText():
             self.goalXValue.setPlainText(str(int(random.uniform(0, 64))))
             self.goalYValue.setPlainText(str(int(random.uniform(0, 64))))
         Xstart = int(self.startXValue.toPlainText())
@@ -106,7 +106,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             Ystart = random.randint(0, 64)
             Xgoal = random.randint(0, 64)
             Ygoal = random.randint(0, 64)
-            if (Xstart == Xgoal) and (Ystart == Ygoal):
+            if Xstart == Xgoal and Ystart == Ygoal:
                 Xgoal = random.randint(0, 64)
                 Ygoal = random.randint(0, 64)
         # add Random value to text inputs
