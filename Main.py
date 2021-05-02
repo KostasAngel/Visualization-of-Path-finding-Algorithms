@@ -37,7 +37,6 @@ pointBrushPath = QtGui.QBrush(QColor("#5fd7ff"))
 
 wallBrush = QtGui.QBrush(QtCore.Qt.darkYellow)
 gridBrush = QtGui.QBrush(QtCore.Qt.lightGray)
-grid = utils.Grid()
 
 
 class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -59,9 +58,12 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Combobox
         for algorithm in ALGORITHMS.keys():
             self.chooseAlgorithm.addItem(algorithm)
+
+        self.maze = False
+        self.grid = utils.Grid()
+
         # GridDraw
         self.draw_grid(scene, penGrid, SIDE)
-        self.maze = False
 
     def show_coordinates(self):
         # Check if there are values to the boxes.
@@ -133,7 +135,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         startingPoint = (Xstart, Ystart)
         goalPoint = (Xgoal, Ygoal)
         text = self.chooseAlgorithm.currentText()
-        result = ALGORITHMS[text](startingPoint, goalPoint, grid)
+        result = ALGORITHMS[text](startingPoint, goalPoint, self.grid)
         # enable scene to draw
         window.draw_grid(scene, penGrid, SIDE)
         # Draw grid
@@ -160,7 +162,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 scene.addRect(y * SIDE, x * SIDE, 10, 10, penPoint, gridBrush)
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
-                if grid.to_ndarray()[y, x] == grid.WALL:
+                if self.grid.to_ndarray()[y, x] == self.grid.WALL:
                     # print wall
                     scene.addRect(y * SIDE, x * SIDE, 10, 10, penPoint, wallBrush)
                 else:
@@ -192,10 +194,10 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         window.setRandomCoordinates.setEnabled(False)
         window.generateMaze.setEnabled(False)
         self.maze = True
-        global grid
-        grid = utils.Grid(create_maze=True, size=GRIDSIZE)
+        # global grid
+        self.grid = utils.Grid(create_maze=True, size=GRIDSIZE)
         global maze_history
-        maze_history = grid.get_maze_history()
+        maze_history = self.grid.get_maze_history()
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
                 scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, wallBrush)
