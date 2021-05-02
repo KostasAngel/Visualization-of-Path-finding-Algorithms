@@ -93,10 +93,10 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # check if there is a maze generated
         if self.maze:
             start = (random.randint(0, 64), random.randint(0, 64))
-            while start not in maze_history:
+            while start not in self.grid.get_maze_history():
                 start = (random.randint(0, 64), random.randint(0, 64))
             goal = (random.randint(0, 64), random.randint(0, 64))
-            while goal not in maze_history:
+            while goal not in self.grid.get_maze_history():
                 goal = (random.randint(0, 64), random.randint(0, 64))
             Xstart = start[0]
             Ystart = start[1]
@@ -194,17 +194,14 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         window.setRandomCoordinates.setEnabled(False)
         window.generateMaze.setEnabled(False)
         self.maze = True
-        # global grid
         self.grid = utils.Grid(create_maze=True, size=GRIDSIZE)
-        global maze_history
-        maze_history = self.grid.get_maze_history()
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
                 scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, wallBrush)
         im = QImage(int(scene.sceneRect().width()), int(scene.sceneRect().height()),
                     QImage.Format_ARGB32_Premultiplied)
         painter = QPainter(im)
-        for i, (x, y) in enumerate(maze_history):
+        for i, (x, y) in enumerate(self.grid.get_maze_history()):
             QtTest.QTest.qWait(2)
             scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, gridBrush)
             if False:
