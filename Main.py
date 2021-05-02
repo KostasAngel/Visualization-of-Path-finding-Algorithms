@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 from PyQt5 import QtCore, QtGui, QtWidgets, uic, QtTest
-from PyQt5.QtGui import QImage, QPainter
+from PyQt5.QtGui import QColor, QImage, QPainter
 
 import path_finding_algorithms.utils as utils
 from path_finding_algorithms.a_star import calculate as aStarCalculate
@@ -25,13 +25,17 @@ ALGORITHMS = {"Breadth First Search": bfsCalculate,
                                                                                 heuristic="euclidean")}
 app = QtWidgets.QApplication(sys.argv)
 scene = QtWidgets.QGraphicsScene()
-penPoint = QtGui.QPen(QtCore.Qt.red)
-pointBrushEnd = QtGui.QBrush(QtCore.Qt.green)
+
+penPoint = QtGui.QPen(QtCore.Qt.gray)
+pointBrushEnd = QtGui.QBrush(QtCore.Qt.red)
 pointBrushStart = QtGui.QBrush(QtCore.Qt.blue)
+
 penGrid = QtGui.QPen(QtCore.Qt.black)
-penVisited = QtGui.QPen(QtCore.Qt.darkRed)
+penVisited = QtGui.QPen(QtCore.Qt.lightGray)
 pointBrushvisited = QtGui.QBrush(QtCore.Qt.white)
-pointBrushPath = QtGui.QBrush(QtCore.Qt.black)
+pointBrushPath = QtGui.QBrush(QColor("#5fd7ff"))
+
+# wallBrush = QtGui.QBrush(QColor("#626262"))
 wallBrush = QtGui.QBrush(QtCore.Qt.darkYellow)
 gridBrush = QtGui.QBrush(QtCore.Qt.lightGray)
 maze = False
@@ -206,9 +210,9 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         for i, (x, y) in enumerate(maze_history):
             QtTest.QTest.qWait(2)
             scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, gridBrush)
-            # if i % 10 == 0:
-            scene.render(painter)
-            im.save(str(Path("/home/marios/Downloads/generate_maze") / f"frame{i:05d}.png"))
+            if False:
+                scene.render(painter)
+                im.save(str(Path("/home/marios/Downloads/generate_maze") / f"frame{i:05d}.png"))
         painter.end()
         window.setRandomCoordinates.setEnabled(True)
 
