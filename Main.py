@@ -66,6 +66,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.draw_grid(self.scene, penGrid, SIDE)
 
         # For recording UI for demo GIFs
+        self.record = record
         self.frame = QImage(int(self.scene.sceneRect().width()), int(self.scene.sceneRect().height()),
                             QImage.Format_ARGB32_Premultiplied)
         self.painter = QPainter(self.frame)
@@ -184,12 +185,20 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                      pointBrushvisited, visited, correctPath, SIDE):
         self.scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
         self.scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
+        algo_name = self.get_current_algorithm_name()
+        i = 0
         for y, x in visited:
-            QtTest.QTest.qWait(5)
+            if not self.record:
+                QtTest.QTest.qWait(5)
             self.scene.addRect(y * SIDE, x * SIDE, 10, 10, penVisited, pointBrushvisited)
             self.scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
+            if self.record:
+                self.render_and_save_frame(algo_name, i)
+            i += 1
         for y, x in correctPath:
             self.scene.addRect(y * SIDE, x * SIDE, 10, 10, penPoint, pointBrushPath)
+            if self.record:
+                self.render_and_save_frame(algo_name, i)
         self.scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
         self.scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
 
@@ -203,19 +212,24 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
                 self.scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, wallBrush)
-        # im = QImage(int(self.scene.sceneRect().width()), int(self.scene.sceneRect().height()),
-        #             QImage.Format_ARGB32_Premultiplied)
-        # painter = QPainter(im)
         for i, (x, y) in enumerate(self.grid.get_maze_history()):
             QtTest.QTest.qWait(2)
             self.scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, gridBrush)
-            if i % 100 == 0:
-                self.render_and_save_frame(i)
+            if self.record:
+                self.render_and_save_frame("maze", i)
         window.setRandomCoordinates.setEnabled(True)
 
-    def render_and_save_frame(self, frame_name):
+    def render_and_save_frame(self, dir_name: str, frame_number: int):
+        path = Path("/home/marios/Downloads/generate_maze") / dir_name
+        if not path.is_dir():
+            path.mkdir(parents=True)
         self.scene.render(self.painter)
-        self.frame.save(str(Path("/home/marios/Downloads/generate_maze") / f"frame{frame_name:05d}.png"))
+        self.frame.save(str(path / f"frame{frame_number:05d}.png"))
+
+    def get_current_algorithm_name(self) -> str:
+        algo = str(self.chooseAlgorithm.currentText()).replace("*", " star").replace(" ", "_")
+        algo = "".join(c.lower() for c in algo if c not in "'()")
+        return algo
 
 
 if __name__ == "__main__":
