@@ -253,7 +253,7 @@ p, li { white-space: pre-wrap; }
      </font>
     </property>
     <property name="text">
-     <string>STEP 2: Coordinates of the ending point [Green]</string>
+     <string>STEP 2: Coordinates of the ending point [Red]</string>
     </property>
    </widget>
    <widget class="QPushButton" name="setRandomCoordinates">
