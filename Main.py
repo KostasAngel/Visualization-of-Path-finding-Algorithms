@@ -242,6 +242,6 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 if __name__ == "__main__":
-    window = MyWindow(record=True)
+    window = MyWindow(record=False)
     window.show()
     sys.exit(app.exec_())
