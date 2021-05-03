@@ -240,6 +240,6 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 if __name__ == "__main__":
-    window = MyWindow(record=False)
+    window = MyWindow(record=True)
     window.show()
     sys.exit(app.exec_())
