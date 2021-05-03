@@ -24,6 +24,10 @@ The following algorithms are implemented:
 
 ## Examples (with maze)
 
-|                A* (Euclidean distance)                |                A* (Manhattan distance)                |             Breadth First Search            |             Depth First Search            |
-|:-----------------------------------------------------:|:-----------------------------------------------------:|:-------------------------------------------:|:-----------------------------------------:|
-| ![A* (Manhattan distance)](demos/a_star_euc_maze.gif) | ![A* (Euclidean distance)](demos/a_star_man_maze.gif) | ![Breadth First Search](demos/bfs_maze.gif) | ![Depth First Search](demos/dfs_maze.gif) |
+|                A* (Euclidean distance)                |                A* (Manhattan distance)                |
+|:-----------------------------------------------------:|:-----------------------------------------------------:|
+| ![A* (Manhattan distance)](demos/a_star_euc_maze.gif) | ![A* (Euclidean distance)](demos/a_star_man_maze.gif) |
+
+|             Breadth First Search            |             Depth First Search            |
+|:-------------------------------------------:|:-----------------------------------------:|
+| ![Breadth First Search](demos/bfs_maze.gif) | ![Depth First Search](demos/dfs_maze.gif) |
