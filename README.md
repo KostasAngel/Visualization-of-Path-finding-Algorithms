@@ -20,12 +20,12 @@ generated with the use of the [Depth First Search](https://en.wikipedia.org/wiki
 
 ## Examples in maze
 
-|                A* (Euclidean distance)                |                A* (Manhattan distance)                |             Breadth First Search &nbsp; &nbsp; &nbsp;       |             Depth First Search &nbsp; &nbsp; &nbsp;     |
+|                A* (Euclidean distance)                |                A* (Manhattan distance)                |    Breadth First Search&nbsp;&nbsp;&nbsp;   | &nbsp;&nbsp;Depth First Search&nbsp;&nbsp;&nbsp; |
 |:-----------------------------------------------------:|:-----------------------------------------------------:|:-------------------------------------------:|:-----------------------------------------:|
 | ![A* (Manhattan distance)](demos/a_star_euc_maze.gif) | ![A* (Euclidean distance)](demos/a_star_man_maze.gif) | ![Breadth First Search](demos/bfs_maze.gif) | ![Depth First Search](demos/dfs_maze.gif) |
 
 ## Examples in empty grid
 
-|                A* (Euclidean distance)                |                A* (Manhattan distance)                |             Breadth First Search`   `       |             Depth First Search`     `     |
+|                A* (Euclidean distance)                |                A* (Manhattan distance)                |    Breadth First Search&nbsp;&nbsp;&nbsp;   | &nbsp;&nbsp;Depth First Search&nbsp;&nbsp;&nbsp; |
 |:-----------------------------------------------------:|:-----------------------------------------------------:|:-------------------------------------------:|:-----------------------------------------:|
 | ![A* (Manhattan distance)](demos/a_star_euc.gif)      | ![A* (Euclidean distance)](demos/a_star_man.gif)      | ![Breadth First Search](demos/bfs.gif)      | ![Depth First Search](demos/dfs.gif)      |
