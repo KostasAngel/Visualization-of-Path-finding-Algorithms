@@ -226,8 +226,10 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.render_and_save_frame(i, "maze")
         window.setRandomCoordinates.setEnabled(True)
 
-    def render_and_save_frame(self, frame_number: int, dir_name: str):
-        path = Path("/home/marios/Downloads/generate_maze") / dir_name
+    def render_and_save_frame(self, frame_number: int, dir_name: str, parent_dir: Path = None):
+        if parent_dir is None:
+            parent_dir = Path.cwd()
+        path = parent_dir / dir_name
         if not path.is_dir():
             path.mkdir(parents=True)
         self.scene.render(self.painter)
