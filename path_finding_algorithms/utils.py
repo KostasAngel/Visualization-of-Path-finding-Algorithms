@@ -11,8 +11,8 @@ from asciimatics.screen import ManagedScreen
 class Grid(object):
     EMPTY, WALL = 0, 1
 
-    def __init__(self, custom_grid: np.ndarray = None, size: int = 64, create_maze: bool = False,
-                 start: tuple = (0, 0), random_seed: int = None):
+    def __init__(self, custom_grid: np.ndarray = None, size: int = 64, create_maze: bool = False, start: tuple = (0, 0),
+                 random_seed: int = None):
         """ Create a grid object.
 
         Essentially a 2D array representing the space on which path-finding will work. Zeros represent empty spaces
@@ -52,8 +52,7 @@ class Grid(object):
                     current_point = queue.pop()
                     if current_point != start:
                         parent = child_parent_pairs[current_point]
-                        in_between_point = tuple(
-                            p + (c - p) // 2 for p, c in zip(parent, current_point))
+                        in_between_point = tuple(p + (c - p) // 2 for p, c in zip(parent, current_point))
                         self.maze_history.append(in_between_point)
                         # mark point in between current and its parent as corridor
                         self.grid[in_between_point] = Grid.EMPTY
@@ -266,9 +265,7 @@ def visualize_asciimatics(res):
     with ManagedScreen() as screen:
         # print visited one by one
         for i in range(1, len(res["visited"])):
-            grid = visualize_grid(
-                res["grid"], visited=res["visited"][:i + 1], start=res["start"], goal=res["goal"])
-
+            grid = visualize_grid(res["grid"], visited=res["visited"][:i + 1], start=res["start"], goal=res["goal"])
             for j, row in enumerate(grid.split("\n")):
                 screen.print_at(row, 0, j)
             screen.refresh()
