@@ -191,7 +191,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             if not self.record:
                 QtTest.QTest.qWait(5)
             self.scene.addRect(y * SIDE, x * SIDE, 10, 10, penVisited, pointBrushvisited)
-            self.scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
+            # self.scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
             if self.record:
                 self.render_and_save_frame(i, algo_name)
             i += 1
