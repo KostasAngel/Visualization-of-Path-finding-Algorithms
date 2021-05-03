@@ -200,6 +200,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.scene.addRect(y * SIDE, x * SIDE, 10, 10, penPoint, pointBrushPath)
             if self.record:
                 self.render_and_save_frame(i, algo_name)
+            i += 1
 
     def generate_maze(self):
         self.runPathFinding.setEnabled(False)
