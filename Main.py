@@ -90,12 +90,12 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.goalYValue.setPlainText(str(random.randint(0, GRIDSIZE - 1)))
 
         # inputs to values
-        Xstart, Ystart = int(self.startXValue.toPlainText()), int(self.startYValue.toPlainText())
-        Xgoal, Ygoal = int(self.goalXValue.toPlainText()), int(self.goalYValue.toPlainText())
+        start_x, start_y = int(self.startXValue.toPlainText()), int(self.startYValue.toPlainText())
+        goal_x, goal_y = int(self.goalXValue.toPlainText()), int(self.goalYValue.toPlainText())
 
         # draw grid
         window.draw_grid(self.scene, penGrid, SIDE)
-        window.draw_start_end_nodes(Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd)
+        window.draw_start_end_nodes(start_x, start_y, goal_x, goal_y, penPoint, pointBrushStart, pointBrushEnd)
         self.runPathFinding.setEnabled(True)
 
     def random_coordinates(self):
@@ -108,24 +108,24 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             goal = (random.randint(0, grid_size), random.randint(0, grid_size))
             while goal not in self.grid.get_maze_history():
                 goal = (random.randint(0, grid_size), random.randint(0, grid_size))
-            Xstart, Ystart = start
-            Xgoal, Ygoal = goal
+            start_x, start_y = start
+            goal_x, goal_y = goal
         else:
             # choose Random value
-            Xstart, Ystart = random.randint(0, grid_size), random.randint(0, grid_size)
-            Xgoal, Ygoal = random.randint(0, grid_size), random.randint(0, grid_size)
-            while Xstart == Xgoal and Ystart == Ygoal:
-                Xgoal, Ygoal = random.randint(0, grid_size), random.randint(0, grid_size)
+            start_x, start_y = random.randint(0, grid_size), random.randint(0, grid_size)
+            goal_x, goal_y = random.randint(0, grid_size), random.randint(0, grid_size)
+            while start_x == goal_x and start_y == goal_y:
+                goal_x, goal_y = random.randint(0, grid_size), random.randint(0, grid_size)
 
         # add Random value to text inputs
-        self.startXValue.setPlainText(str(Xstart))
-        self.startYValue.setPlainText(str(Ystart))
-        self.goalXValue.setPlainText(str(Xgoal))
-        self.goalYValue.setPlainText(str(Ygoal))
+        self.startXValue.setPlainText(str(start_x))
+        self.startYValue.setPlainText(str(start_y))
+        self.goalXValue.setPlainText(str(goal_x))
+        self.goalYValue.setPlainText(str(goal_y))
 
         # Draw
         window.draw_grid(self.scene, penGrid, SIDE)
-        window.draw_start_end_nodes(Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd)
+        window.draw_start_end_nodes(start_x, start_y, goal_x, goal_y, penPoint, pointBrushStart, pointBrushEnd)
         self.runPathFinding.setEnabled(True)
 
     def run_algorithm(self):
@@ -135,41 +135,41 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         window.generateMaze.setEnabled(False)
 
         # inputs to values
-        Xstart = int(self.startXValue.toPlainText())
-        Ystart = int(self.startYValue.toPlainText())
-        Xgoal = int(self.goalXValue.toPlainText())
-        Ygoal = int(self.goalYValue.toPlainText())
+        start_x = int(self.startXValue.toPlainText())
+        start_y = int(self.startYValue.toPlainText())
+        goal_x = int(self.goalXValue.toPlainText())
+        goal_y = int(self.goalYValue.toPlainText())
 
         # assign to variables to run Algo
-        startingPoint = (Xstart, Ystart)
-        goalPoint = (Xgoal, Ygoal)
+        starting_point = (start_x, start_y)
+        goal_point = (goal_x, goal_y)
         text = self.chooseAlgorithm.currentText()
-        result = ALGORITHMS[text](startingPoint, goalPoint, self.grid)
+        result = ALGORITHMS[text](starting_point, goal_point, self.grid)
 
         # enable scene to draw
         window.draw_grid(self.scene, penGrid, SIDE)
 
         # Draw grid
-        window.draw_start_end_nodes(Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd)
+        window.draw_start_end_nodes(start_x, start_y, goal_x, goal_y, penPoint, pointBrushStart, pointBrushEnd)
 
         # Get paths
-        correctPath = result.get("path")
+        correct_path = result.get("path")
         visited = result.get("visited")
 
         # GridDrawVisited
-        window.draw_visited(Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd, penVisited,
-                            pointBrushVisited, visited, correctPath, SIDE)
+        window.draw_visited(start_x, start_y, goal_x, goal_y, penPoint, pointBrushStart, pointBrushEnd, penVisited,
+                            pointBrushVisited, visited, correct_path, SIDE)
         if not self.maze:
             window.setCoordinates.setEnabled(True)
         window.setRandomCoordinates.setEnabled(True)
         self.runPathFinding.setEnabled(True)
 
-    def draw_grid(self, scene, penGrid, SIDE):
+    def draw_grid(self, scene, pen_grid, SIDE):
         self.graphicsView.setScene(scene)
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
                 r = QtCore.QRectF(QtCore.QPointF(y * SIDE, x * SIDE), QtCore.QSizeF(SIDE, SIDE))
-                scene.addRect(r, penGrid)
+                scene.addRect(r, pen_grid)
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
                 scene.addRect(y * SIDE, x * SIDE, 10, 10, penPoint, gridBrush)
@@ -182,29 +182,29 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     # print path
                     pass
 
-    def draw_start_end_nodes(self, Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd):
+    def draw_start_end_nodes(self, start_x, start_y, goal_x, goal_y, pen_point, point_brush_start, point_brush_end):
         self.scene.clear()
         window.draw_grid(self.scene, penGrid, SIDE)
-        self.scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
-        self.scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
+        self.scene.addRect(int(start_x * SIDE), int(start_y * SIDE), 10, 10, pen_point, point_brush_start)
+        self.scene.addRect(int(goal_x * SIDE), int(goal_y * SIDE), 10, 10, pen_point, point_brush_end)
 
-    def draw_visited(self, Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd, penVisited,
-                     pointBrushvisited, visited, correctPath, SIDE):
-        self.scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
-        self.scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
+    def draw_visited(self, start_x, start_y, goal_x, goal_y, pen_point, point_brush_start, point_brush_end, pen_visited,
+                     point_brush_visited, visited, correct_path, SIDE):
+        self.scene.addRect(int(start_x * SIDE), int(start_y * SIDE), 10, 10, pen_point, point_brush_start)
+        self.scene.addRect(int(goal_x * SIDE), int(goal_y * SIDE), 10, 10, pen_point, point_brush_end)
         algo_name = self.get_current_algorithm_name()
         i = 0
         for y, x in visited[1:-1]:  # skips start and goal
             if not self.record:
                 QtTest.QTest.qWait(5)
-            self.scene.addRect(y * SIDE, x * SIDE, 10, 10, penVisited, pointBrushvisited)
+            self.scene.addRect(y * SIDE, x * SIDE, 10, 10, pen_visited, point_brush_visited)
             if self.record:
                 self.render_and_save_frame(i, algo_name)
             i += 1
-        for y, x in correctPath[1:-1]:  # skips start and goal
+        for y, x in correct_path[1:-1]:  # skips start and goal
             if not self.record:
                 QtTest.QTest.qWait(2)
-            self.scene.addRect(y * SIDE, x * SIDE, 10, 10, penPoint, pointBrushPath)
+            self.scene.addRect(y * SIDE, x * SIDE, 10, 10, pen_point, pointBrushPath)
             if self.record:
                 self.render_and_save_frame(i, algo_name)
             i += 1
