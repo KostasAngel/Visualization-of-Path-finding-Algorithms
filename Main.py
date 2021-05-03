@@ -96,32 +96,30 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.runPathFinding.setEnabled(True)
 
     def random_coordinates(self):
+        grid_size = GRIDSIZE - 1
         # check if there is a maze generated
         if self.maze:
-            start = (random.randint(0, 64), random.randint(0, 64))
+            start = (random.randint(0, grid_size), random.randint(0, grid_size))
             while start not in self.grid.get_maze_history():
-                start = (random.randint(0, 64), random.randint(0, 64))
-            goal = (random.randint(0, 64), random.randint(0, 64))
+                start = (random.randint(0, grid_size), random.randint(0, grid_size))
+            goal = (random.randint(0, grid_size), random.randint(0, grid_size))
             while goal not in self.grid.get_maze_history():
-                goal = (random.randint(0, 64), random.randint(0, 64))
-            Xstart = start[0]
-            Ystart = start[1]
-            Xgoal = goal[0]
-            Ygoal = goal[1]
+                goal = (random.randint(0, grid_size), random.randint(0, grid_size))
+            Xstart, Ystart = start
+            Xgoal, Ygoal = goal
         else:
             # Chose Random value
-            Xstart = random.randint(0, 64)
-            Ystart = random.randint(0, 64)
-            Xgoal = random.randint(0, 64)
-            Ygoal = random.randint(0, 64)
+            Xstart, Ystart = random.randint(0, grid_size), random.randint(0, grid_size)
+            Xgoal, Ygoal = random.randint(0, grid_size), random.randint(0, grid_size)
             if Xstart == Xgoal and Ystart == Ygoal:
-                Xgoal = random.randint(0, 64)
-                Ygoal = random.randint(0, 64)
+                Xgoal, Ygoal = random.randint(0, grid_size), random.randint(0, grid_size)
+
         # add Random value to text inputs
         self.startXValue.setPlainText(str(Xstart))
         self.startYValue.setPlainText(str(Ystart))
         self.goalXValue.setPlainText(str(Xgoal))
         self.goalYValue.setPlainText(str(Ygoal))
+
         # Draw
         window.draw_grid(self.scene, penGrid, SIDE)
         window.draw_start_end_nodes(Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd)
