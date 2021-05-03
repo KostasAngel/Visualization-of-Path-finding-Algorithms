@@ -187,20 +187,18 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
         algo_name = self.get_current_algorithm_name()
         i = 0
-        for y, x in visited:
+        for y, x in visited[1:-1]:  # skips start and goal
             if not self.record:
                 QtTest.QTest.qWait(5)
             self.scene.addRect(y * SIDE, x * SIDE, 10, 10, penVisited, pointBrushvisited)
             self.scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
             if self.record:
-                self.render_and_save_frame(algo_name, i)
+                self.render_and_save_frame(i, algo_name)
             i += 1
-        for y, x in correctPath:
+        for y, x in correctPath[1:-1]:  # skips start and goal
             self.scene.addRect(y * SIDE, x * SIDE, 10, 10, penPoint, pointBrushPath)
             if self.record:
-                self.render_and_save_frame(algo_name, i)
-        self.scene.addRect(int(Xstart * SIDE), int(Ystart * SIDE), 10, 10, penPoint, pointBrushStart)
-        self.scene.addRect(int(Xgoal * SIDE), int(Ygoal * SIDE), 10, 10, penPoint, pointBrushEnd)
+                self.render_and_save_frame(i, algo_name)
 
     def generate_maze(self):
         self.runPathFinding.setEnabled(False)
@@ -216,10 +214,10 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             QtTest.QTest.qWait(2)
             self.scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, gridBrush)
             if self.record:
-                self.render_and_save_frame("maze", i)
+                self.render_and_save_frame(i, "maze")
         window.setRandomCoordinates.setEnabled(True)
 
-    def render_and_save_frame(self, dir_name: str, frame_number: int):
+    def render_and_save_frame(self, frame_number: int, dir_name: str):
         path = Path("/home/marios/Downloads/generate_maze") / dir_name
         if not path.is_dir():
             path.mkdir(parents=True)
