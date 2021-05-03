@@ -15,6 +15,8 @@ for ((i = 0; i < ${#files[@]}; i += batch)); do
 done
 
 ## Merge part gifs into a single file
-## convert animated.*.gif all.gif
-gifsicle -O3 --multifile *.gif -o all.gif
+## First merge into single gif
+gifsicle --multifile ./*.gif -o all.gif
 
+## Edit single gif to add delay on the last frame, and optimize it to reduce size (overwrites original file)
+gifsicle --batch all.gif "#0--2" -d500 "#-1" -O3
