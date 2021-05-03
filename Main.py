@@ -45,6 +45,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
         self.scene = QtWidgets.QGraphicsScene()
+
         # Buttons
         self.runPathFinding.clicked.connect(self.run_algorithm)
         self.setCoordinates.clicked.connect(self.show_coordinates)
@@ -55,6 +56,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.startYValue.setPlainText("0")
         self.goalXValue.setPlainText(str(GRIDSIZE - 1))
         self.goalYValue.setPlainText(str(GRIDSIZE - 1))
+
         # Combobox
         for algorithm in ALGORITHMS.keys():
             self.chooseAlgorithm.addItem(algorithm)
@@ -72,8 +74,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.painter = QPainter(self.frame)
 
     def show_coordinates(self):
-        # Check if there are values to the boxes.
-        # inputs to values
+        # check if there are values in the input boxes
         if not 0 <= int(self.startXValue.toPlainText()) < GRIDSIZE:
             self.startXValue.setPlainText("0")
         if not 0 <= int(self.startYValue.toPlainText()) < GRIDSIZE:
@@ -88,10 +89,11 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.goalXValue.setPlainText(str(random.randint(0, GRIDSIZE - 1)))
             self.goalYValue.setPlainText(str(random.randint(0, GRIDSIZE - 1)))
 
+        # inputs to values
         Xstart, Ystart = int(self.startXValue.toPlainText()), int(self.startYValue.toPlainText())
         Xgoal, Ygoal = int(self.goalXValue.toPlainText()), int(self.goalYValue.toPlainText())
 
-        # GridDraw
+        # draw grid
         window.draw_grid(self.scene, penGrid, SIDE)
         window.draw_start_end_nodes(Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd)
         self.runPathFinding.setEnabled(True)
@@ -112,7 +114,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             # choose Random value
             Xstart, Ystart = random.randint(0, grid_size), random.randint(0, grid_size)
             Xgoal, Ygoal = random.randint(0, grid_size), random.randint(0, grid_size)
-            if Xstart == Xgoal and Ystart == Ygoal:
+            while Xstart == Xgoal and Ystart == Ygoal:
                 Xgoal, Ygoal = random.randint(0, grid_size), random.randint(0, grid_size)
 
         # add Random value to text inputs
@@ -131,23 +133,29 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         window.setCoordinates.setEnabled(False)
         window.setRandomCoordinates.setEnabled(False)
         window.generateMaze.setEnabled(False)
+
         # inputs to values
         Xstart = int(self.startXValue.toPlainText())
         Ystart = int(self.startYValue.toPlainText())
         Xgoal = int(self.goalXValue.toPlainText())
         Ygoal = int(self.goalYValue.toPlainText())
+
         # assign to variables to run Algo
         startingPoint = (Xstart, Ystart)
         goalPoint = (Xgoal, Ygoal)
         text = self.chooseAlgorithm.currentText()
         result = ALGORITHMS[text](startingPoint, goalPoint, self.grid)
+
         # enable scene to draw
         window.draw_grid(self.scene, penGrid, SIDE)
+
         # Draw grid
         window.draw_start_end_nodes(Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd)
+
         # Get paths
         correctPath = result.get("path")
         visited = result.get("visited")
+
         # GridDrawVisited
         window.draw_visited(Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd, penVisited,
                             pointBrushVisited, visited, correctPath, SIDE)
