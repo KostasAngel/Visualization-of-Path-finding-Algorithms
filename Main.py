@@ -53,8 +53,8 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.runPathFinding.setEnabled(False)
         self.startXValue.setPlainText("0")
         self.startYValue.setPlainText("0")
-        self.goalXValue.setPlainText("63")
-        self.goalYValue.setPlainText("63")
+        self.goalXValue.setPlainText(str(GRIDSIZE - 1))
+        self.goalYValue.setPlainText(str(GRIDSIZE - 1))
         # Combobox
         for algorithm in ALGORITHMS.keys():
             self.chooseAlgorithm.addItem(algorithm)
@@ -74,22 +74,23 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def show_coordinates(self):
         # Check if there are values to the boxes.
         # inputs to values
-        if not 0 <= int(self.startXValue.toPlainText()) < 64:
+        if not 0 <= int(self.startXValue.toPlainText()) < GRIDSIZE:
             self.startXValue.setPlainText("0")
-        if not 0 <= int(self.startYValue.toPlainText()) < 64:
+        if not 0 <= int(self.startYValue.toPlainText()) < GRIDSIZE:
             self.startYValue.setPlainText("0")
-        if not 0 <= int(self.goalXValue.toPlainText()) < 64:
-            self.goalXValue.setPlainText("63")
-        if not 0 <= int(self.goalYValue.toPlainText()) < 64:
-            self.goalYValue.setPlainText("63")
+        if not 0 <= int(self.goalXValue.toPlainText()) < GRIDSIZE:
+            self.goalXValue.setPlainText(str(GRIDSIZE - 1))
+        if not 0 <= int(self.goalYValue.toPlainText()) < GRIDSIZE:
+            self.goalYValue.setPlainText(str(GRIDSIZE - 1))
+
         if self.startXValue.toPlainText() == self.goalXValue.toPlainText() and \
                 self.startYValue.toPlainText() == self.goalYValue.toPlainText():
-            self.goalXValue.setPlainText(str(int(random.uniform(0, 64))))
-            self.goalYValue.setPlainText(str(int(random.uniform(0, 64))))
-        Xstart = int(self.startXValue.toPlainText())
-        Ystart = int(self.startYValue.toPlainText())
-        Xgoal = int(self.goalXValue.toPlainText())
-        Ygoal = int(self.goalYValue.toPlainText())
+            self.goalXValue.setPlainText(str(random.randint(0, GRIDSIZE - 1)))
+            self.goalYValue.setPlainText(str(random.randint(0, GRIDSIZE - 1)))
+
+        Xstart, Ystart = int(self.startXValue.toPlainText()), int(self.startYValue.toPlainText())
+        Xgoal, Ygoal = int(self.goalXValue.toPlainText()), int(self.goalYValue.toPlainText())
+
         # GridDraw
         window.draw_grid(self.scene, penGrid, SIDE)
         window.draw_start_end_nodes(Xstart, Ystart, Xgoal, Ygoal, penPoint, pointBrushStart, pointBrushEnd)
@@ -108,7 +109,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             Xstart, Ystart = start
             Xgoal, Ygoal = goal
         else:
-            # Chose Random value
+            # choose Random value
             Xstart, Ystart = random.randint(0, grid_size), random.randint(0, grid_size)
             Xgoal, Ygoal = random.randint(0, grid_size), random.randint(0, grid_size)
             if Xstart == Xgoal and Ystart == Ygoal:
