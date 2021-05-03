@@ -208,7 +208,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         window.setRandomCoordinates.setEnabled(False)
         window.generateMaze.setEnabled(False)
         self.maze = True
-        self.grid = utils.Grid(create_maze=True, size=GRIDSIZE)
+        self.grid = utils.Grid(create_maze=True, size=GRIDSIZE, random_seed=42 if self.record else None)
         for y in range(GRIDSIZE):
             for x in range(GRIDSIZE):
                 self.scene.addRect(x * SIDE, y * SIDE, 10, 10, penPoint, wallBrush)
@@ -233,6 +233,6 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 if __name__ == "__main__":
-    window = MyWindow()
+    window = MyWindow(record=False)
     window.show()
     sys.exit(app.exec_())
