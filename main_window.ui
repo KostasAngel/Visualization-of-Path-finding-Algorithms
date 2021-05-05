@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Path Finding Visuallization</string>
+   <string>Path Finding Visualization</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QComboBox" name="chooseAlgorithm">
@@ -253,7 +253,7 @@ p, li { white-space: pre-wrap; }
      </font>
     </property>
     <property name="text">
-     <string>STEP 2: Coordinates of the ending point [Green]</string>
+     <string>STEP 2: Coordinates of the ending point [Red]</string>
     </property>
    </widget>
    <widget class="QPushButton" name="setRandomCoordinates">
